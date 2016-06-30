@@ -1,0 +1,45 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.radek.cv_creator.fragments.NoProfilesFragment"
+    android:clickable="true">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You don`t have any profiles. "
+        android:layout_marginTop="60dp"
+        android:id="@+id/textView3"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="20dp"
+        android:textColor="#000000"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:layout_width="256dp"
+        android:layout_height="256dp"
+        android:id="@+id/imageView3"
+        android:src="@drawable/yuhavenoprofiles"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="128dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/createFirstProfileImageView"
+        android:src="@drawable/create_profile_button"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/create_profile_button"
+        android:id="@+id/createProfileButton"
+        android:layout_alignTop="@+id/createFirstProfileImageView"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>
