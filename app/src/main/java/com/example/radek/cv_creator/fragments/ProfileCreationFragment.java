@@ -27,6 +27,7 @@ public class ProfileCreationFragment extends Fragment{
     ImageView photoImageView;
     static final int PHOTO_REQUEST_CODE = 1;
 
+
     public ProfileCreationFragment() {
         // Required empty public constructor
     }
@@ -85,7 +86,6 @@ public class ProfileCreationFragment extends Fragment{
 
     public interface OnProfileCreateFragmentClickListener
     {
-        void onCreateProfileFragmentClick(View view);
+        void onCreateProfileFragmentInteraction(View view);
     }
 }
-

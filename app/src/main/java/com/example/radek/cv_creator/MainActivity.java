@@ -1,5 +1,6 @@
 package com.example.radek.cv_creator;
 
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
@@ -20,18 +21,22 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.radek.cv_creator.fragments.CVCreationFragment;
-import com.example.radek.cv_creator.fragments.FindPeopleFragment;
+import com.example.radek.cv_creator.fragments.CVManagementFragment;
+import com.example.radek.cv_creator.fragments.HomeFragment;
 import com.example.radek.cv_creator.fragments.NoProfilesFragment;
 import com.example.radek.cv_creator.fragments.ProfileCreationFragment;
+import com.example.radek.cv_creator.fragments.ProfileManagementFragment;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         NoProfilesFragment.OnProfileCreateButtonClickListener,
-        CVCreationFragment.OnCVCreationListener{
+        CVCreationFragment.OnCVCreationListener,
+        HomeFragment.HomeEventListener,
+        CVManagementFragment.OnFragmentInteractionListener,
+        ProfileManagementFragment.ProfileManagementEventListener,
+        ProfileCreationFragment.OnProfileCreateFragmentClickListener{
 
     PhotoManager photoManager;
     Toolbar toolbar;
@@ -45,8 +50,10 @@ public class MainActivity extends AppCompatActivity
 
     NoProfilesFragment noProfilesFragment;
     CVCreationFragment cvCreationFragment;
+    CVManagementFragment cvManagementFragment;
     ProfileCreationFragment profileCreationFragment;
-    FragmentManager fragmentManager;
+    ProfileManagementFragment profileManagementFragment;
+    HomeFragment homeFragment;
     FragmentTransaction fragmentTransaction;
 
     @Override
@@ -91,7 +98,10 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         noProfilesFragment = new NoProfilesFragment();
         cvCreationFragment = new CVCreationFragment();
+        cvManagementFragment = new CVManagementFragment();
         profileCreationFragment = new ProfileCreationFragment();
+        profileManagementFragment = new ProfileManagementFragment();
+        homeFragment = new HomeFragment();
     }
 
     @Override
@@ -132,11 +142,24 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_profiles) {
+        if (id == R.id.nav_home) {
             detachAllFragments();
-            Fragment fragment = new FindPeopleFragment();
+            getSupportActionBar().setTitle("CV Creator");
+            Bundle bundle = new Bundle();
+            Fragment fragment =  new HomeFragment();
+            bundle.putParcelableArrayList("profilesResource",userProfiles);
+            fragment.setArguments(bundle);
+            displayFragment(fragment);
 
-            // Handle the camera action
+        } else if (id == R.id.nav_cv_manage) {
+            detachAllFragments();
+            getSupportActionBar().setTitle("Manage existing CVs");
+            Bundle bundle = new Bundle();
+            Fragment fragment = new CVManagementFragment();
+            //bundle.putParcelableArrayList("profilesResource",userProfiles);
+            fragment.setArguments(bundle);
+            displayFragment(fragment);
+
         } else if (id == R.id.nav_cv_create) {
             detachAllFragments();
             getSupportActionBar().setTitle("Create new CV");
@@ -144,22 +167,24 @@ public class MainActivity extends AppCompatActivity
             Fragment fragment = new CVCreationFragment();
             bundle.putParcelableArrayList("profilesResource",userProfiles);
             fragment.setArguments(bundle);
-
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    //.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
-                    .replace(R.id.fragmentsRelativeLayout, fragment)
-                    .addToBackStack(null)
-                    .commit();
-
-        } else if (id == R.id.nav_cv_storage) {
-
-        } else if (id == R.id.nav_manage) {
+            displayFragment(fragment);
 
         } else if (id == R.id.nav_manage_profiles) {
-
-        } else if (id == R.id.nav_send) {
-
+            detachAllFragments();
+            getSupportActionBar().setTitle("Manage existing profiles");
+            Fragment fragment = new ProfileManagementFragment();
+            Bundle bundle = new Bundle();
+            //bundle.putParcelableArrayList("profilesResource",userProfiles);
+            fragment.setArguments(bundle);
+            displayFragment(fragment);
+        } else if (id == R.id.nav_profie_create) {
+            detachAllFragments();
+            getSupportActionBar().setTitle("Create new profile");
+            Fragment fragment = new ProfileCreationFragment();
+            Bundle bundle = new Bundle();
+            bundle.putParcelableArrayList("profilesResource",userProfiles);
+            fragment.setArguments(bundle);
+            displayFragment(fragment);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -169,9 +194,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onNoProfileButtonClick() {
-        Toast.makeText(getApplicationContext(),"Button clicked", Toast.LENGTH_SHORT).show();
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentsRelativeLayout, profileCreationFragment);
+        fragmentTransaction.replace(R.id.fragmentsRelativeLayout, new ProfileCreationFragment());
         fragmentTransaction.commit();
     }
 
@@ -185,8 +209,22 @@ public class MainActivity extends AppCompatActivity
 
         fragmentTransaction.detach(noProfilesFragment);
         fragmentTransaction.detach(profileCreationFragment);
+        fragmentTransaction.detach(homeFragment);
+        fragmentTransaction.detach(cvCreationFragment);
+        fragmentTransaction.detach(cvManagementFragment);
+        fragmentTransaction.detach(profileManagementFragment);
 
         fragmentTransaction.commit();
+    }
+
+    private void displayFragment(Fragment fragment){
+        if(!fragment.isAdded())
+        getSupportFragmentManager()
+                .beginTransaction()
+                //.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                .replace(R.id.fragmentsRelativeLayout, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     private ArrayList<Profile> getMockProfilesArrayList(){
@@ -198,5 +236,20 @@ public class MainActivity extends AppCompatActivity
         result.add(profile);
         result.add(profile2);
         return result;
+    }
+
+    @Override
+    public void onSumfin() { // home fragment
+
+    }
+
+    @Override
+    public void onCVManagementFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onCreateProfileFragmentInteraction(View view) {
+
     }
 }

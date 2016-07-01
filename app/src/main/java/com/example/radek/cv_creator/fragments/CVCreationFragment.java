@@ -80,7 +80,6 @@ public class CVCreationFragment extends Fragment {
         View fragmentView = inflater.inflate(R.layout.fragment_cvcreation, container, false);
         profileChoiceSpinner = (Spinner) fragmentView.findViewById(R.id.profileChoiceSpinner);
         profilesResource = (ArrayList<Profile>) args.get("profilesResource");
-        Log.d("AAAAAAAAAAAAAAAAAAAAAAA", profilesResource.toString());
 
         profileChoiceSpinnerAdapter = new ProfileChoiceSpinnerAdapter(getActivity(), profilesResource);
         profileChoiceSpinnerAdapter.setDropDownViewResource(R.layout.profile_choice_spinner);
