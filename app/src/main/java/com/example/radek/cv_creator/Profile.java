@@ -1,6 +1,8 @@
 package com.example.radek.cv_creator;
 
 import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Patterns;
 
 import java.io.Serializable;
@@ -9,7 +11,7 @@ import java.util.Date;
 /**
  * Created by Radek on 2016-06-29.
  */
-public class Profile implements Serializable {
+public class Profile implements Serializable, Parcelable {
 
     private String name;
     private Date DOB;
@@ -24,12 +26,34 @@ public class Profile implements Serializable {
         DOB = new Date();
     }
 
+    protected Profile(Parcel in) {
+        name = in.readString();
+        gender = in.readString();
+        email = in.readString();
+        phoneNumber = in.readString();
+        addressLine1 = in.readString();
+        addressLine2 = in.readString();
+        photo = in.readParcelable(Bitmap.class.getClassLoader());
+    }
+
+    public static final Creator<Profile> CREATOR = new Creator<Profile>() {
+        @Override
+        public Profile createFromParcel(Parcel in) {
+            return new Profile(in);
+        }
+
+        @Override
+        public Profile[] newArray(int size) {
+            return new Profile[size];
+        }
+    };
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) throws WrongDataFormatException{
-        if(name.matches("[a-zA-Z]+"))
+        if(true)
             this.name = name;
         else throw new WrongDataFormatException("Wrong name");
     }
@@ -92,5 +116,21 @@ public class Profile implements Serializable {
 
     public void setPhoto(Bitmap photo) {
         this.photo = photo;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(name);
+        parcel.writeString(gender);
+        parcel.writeString(email);
+        parcel.writeString(phoneNumber);
+        parcel.writeString(addressLine1);
+        parcel.writeString(addressLine2);
+        parcel.writeParcelable(photo, i);
     }
 }

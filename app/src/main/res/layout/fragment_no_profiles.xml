@@ -10,36 +10,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="You don`t have any profiles. "
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="44dp"
         android:id="@+id/textView3"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:textSize="20dp"
         android:textColor="#000000"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/imageView3" />
 
     <ImageView
         android:layout_width="256dp"
         android:layout_height="256dp"
         android:id="@+id/imageView3"
         android:src="@drawable/yuhavenoprofiles"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
-
-    <ImageView
-        android:layout_width="128dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/createFirstProfileImageView"
-        android:src="@drawable/create_profile_button"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/textView3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/create_profile_button"
-        android:id="@+id/createProfileButton"
-        android:layout_alignTop="@+id/createFirstProfileImageView"
-        android:layout_alignParentEnd="true" />
+        android:id="@+id/noProfilesCreateButton"
+        android:background="#3F51B5"
+        android:layout_below="@+id/imageView3"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="36dp"
+        android:textColor="#ffffff"
+        android:textSize="20dp" />
 
 </RelativeLayout>

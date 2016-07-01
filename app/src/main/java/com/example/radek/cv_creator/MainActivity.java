@@ -1,7 +1,7 @@
 package com.example.radek.cv_creator;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -19,15 +19,19 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.radek.cv_creator.fragments.CVCreationFragment;
 import com.example.radek.cv_creator.fragments.FindPeopleFragment;
 import com.example.radek.cv_creator.fragments.NoProfilesFragment;
 import com.example.radek.cv_creator.fragments.ProfileCreationFragment;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        NoProfilesFragment.OnProfileCreateButtonClickListener{
+        NoProfilesFragment.OnProfileCreateButtonClickListener,
+        CVCreationFragment.OnCVCreationListener{
 
     PhotoManager photoManager;
     Toolbar toolbar;
@@ -37,7 +41,10 @@ public class MainActivity extends AppCompatActivity
     Button photoButton;
     ImageView imageView;
 
+    ArrayList<Profile> userProfiles;
+
     NoProfilesFragment noProfilesFragment;
+    CVCreationFragment cvCreationFragment;
     ProfileCreationFragment profileCreationFragment;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
@@ -47,6 +54,9 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findRefs();
+
+        userProfiles = getMockProfilesArrayList();
+
         setSupportActionBar(toolbar);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +76,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         fragmentTransaction.add(R.id.fragmentsRelativeLayout, noProfilesFragment);
+        //fragmentTransaction.add(R.id.fragmentsRelativeLayout, cvCreationFragment);
         fragmentTransaction.attach(noProfilesFragment);
         fragmentTransaction.commit();
     }
@@ -75,12 +86,12 @@ public class MainActivity extends AppCompatActivity
         fab = (FloatingActionButton) findViewById(R.id.fab);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+        userProfiles = new ArrayList<>();
 
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         noProfilesFragment = new NoProfilesFragment();
+        cvCreationFragment = new CVCreationFragment();
         profileCreationFragment = new ProfileCreationFragment();
-        //photoButton = (Button) findViewById(R.id.button);
-        //imageView = (ImageView) findViewById(R.id.imageView2);
     }
 
     @Override
@@ -119,23 +130,33 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        Fragment fragment = null;
         int id = item.getItemId();
 
         if (id == R.id.nav_profiles) {
-            fragment = new FindPeopleFragment();
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.fragmentsRelativeLayout, fragment).commit();
+            detachAllFragments();
+            Fragment fragment = new FindPeopleFragment();
 
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_cv_create) {
+            detachAllFragments();
+            getSupportActionBar().setTitle("Create new CV");
+            Bundle bundle = new Bundle();
+            Fragment fragment = new CVCreationFragment();
+            bundle.putParcelableArrayList("profilesResource",userProfiles);
+            fragment.setArguments(bundle);
 
-        } else if (id == R.id.nav_slideshow) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    //.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                    .replace(R.id.fragmentsRelativeLayout, fragment)
+                    .addToBackStack(null)
+                    .commit();
+
+        } else if (id == R.id.nav_cv_storage) {
 
         } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_manage_profiles) {
 
         } else if (id == R.id.nav_send) {
 
@@ -152,6 +173,30 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragmentsRelativeLayout, profileCreationFragment);
         fragmentTransaction.commit();
+    }
 
+    @Override
+    public void onCVCreated() {
+        Toast.makeText(getApplicationContext(),"CV created",Toast.LENGTH_SHORT).show();
+    }
+
+    private void detachAllFragments(){
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+        fragmentTransaction.detach(noProfilesFragment);
+        fragmentTransaction.detach(profileCreationFragment);
+
+        fragmentTransaction.commit();
+    }
+
+    private ArrayList<Profile> getMockProfilesArrayList(){
+        ArrayList<Profile> result = new ArrayList<>();
+        Profile profile = new Profile();
+        Profile profile2 = new Profile();
+        profile.setName("Jan Kowalski");
+        profile2.setName("Andrzej Nowak");
+        result.add(profile);
+        result.add(profile2);
+        return result;
     }
 }
