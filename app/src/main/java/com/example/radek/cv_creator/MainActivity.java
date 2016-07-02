@@ -1,5 +1,9 @@
 package com.example.radek.cv_creator;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -7,6 +11,12 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.view.menu.ActionMenuItem;
+import android.support.v7.view.menu.MenuItemImpl;
+import android.util.Log;
+import android.view.ActionProvider;
+import android.view.ContextMenu;
+import android.view.SubMenu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -29,8 +39,8 @@ import com.example.radek.cv_creator.fragments.ProfileManagementFragment;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
+public class MainActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
         NoProfilesFragment.OnProfileCreateButtonClickListener,
         CVCreationFragment.OnCVCreationListener,
         HomeFragment.HomeEventListener,
@@ -38,7 +48,6 @@ public class MainActivity extends AppCompatActivity
         ProfileManagementFragment.ProfileManagementEventListener,
         ProfileCreationFragment.OnProfileCreateFragmentClickListener{
 
-    PhotoManager photoManager;
     Toolbar toolbar;
     FloatingActionButton fab;
     DrawerLayout drawer;
@@ -143,6 +152,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
+            fab.setVisibility(View.INVISIBLE);
             detachAllFragments();
             getSupportActionBar().setTitle("CV Creator");
             Bundle bundle = new Bundle();
@@ -153,6 +163,15 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_cv_manage) {
             detachAllFragments();
+
+            fab.setVisibility(View.VISIBLE);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onNavigationItemSelected(new ActionMenuItem(getApplicationContext(),0,R.id.nav_cv_create,0,0,""));
+                }
+            });
+
             getSupportActionBar().setTitle("Manage existing CVs");
             Bundle bundle = new Bundle();
             Fragment fragment = new CVManagementFragment();
@@ -161,6 +180,8 @@ public class MainActivity extends AppCompatActivity
             displayFragment(fragment);
 
         } else if (id == R.id.nav_cv_create) {
+            fab.setVisibility(View.INVISIBLE);
+
             detachAllFragments();
             getSupportActionBar().setTitle("Create new CV");
             Bundle bundle = new Bundle();
@@ -171,13 +192,24 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_manage_profiles) {
             detachAllFragments();
+
+            fab.setVisibility(View.VISIBLE);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onNavigationItemSelected(new ActionMenuItem(getApplicationContext(),0,R.id.nav_profie_create,0,0,""));
+                }
+            });
+
             getSupportActionBar().setTitle("Manage existing profiles");
             Fragment fragment = new ProfileManagementFragment();
             Bundle bundle = new Bundle();
             //bundle.putParcelableArrayList("profilesResource",userProfiles);
             fragment.setArguments(bundle);
             displayFragment(fragment);
+
         } else if (id == R.id.nav_profie_create) {
+            fab.setVisibility(View.INVISIBLE);
             detachAllFragments();
             getSupportActionBar().setTitle("Create new profile");
             Fragment fragment = new ProfileCreationFragment();
@@ -232,6 +264,14 @@ public class MainActivity extends AppCompatActivity
         Profile profile = new Profile();
         Profile profile2 = new Profile();
         profile.setName("Jan Kowalski");
+        Bitmap bitmap = Bitmap.createBitmap(256,256, Bitmap.Config.ARGB_8888);
+        for(int i=0;i<256;i++){
+            for(int j=0;i<256;i++){
+                bitmap.setPixel(i, j, Color.CYAN);
+            }
+        }
+        profile.setPhoto(bitmap);
+        profile2.setPhoto(bitmap);
         profile2.setName("Andrzej Nowak");
         result.add(profile);
         result.add(profile2);
