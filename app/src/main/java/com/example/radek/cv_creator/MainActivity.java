@@ -219,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements
 
             detachAllFragments();
             getSupportActionBar().setTitle("Create new profile");
-            Fragment fragment = new ProfileCreationFragment();
+            final Fragment fragment = new ProfileCreationFragment();
             Bundle bundle = new Bundle();
             bundle.putParcelableArrayList("profilesResource",userProfiles);
             fragment.setArguments(bundle);
@@ -232,9 +232,16 @@ public class MainActivity extends AppCompatActivity implements
                 @Override
                 public void onClick(View view) {
                     //TODO: save data into shared prefs
+                    ((ProfileCreationFragment)fragment).setErrorsDisabled();
                     hideKeyboard();
-                    Snackbar successSnackbar = Snackbar.make(getCurrentFocus(),"Successfully added new profile",Snackbar.LENGTH_SHORT);
-                    successSnackbar.show();
+                    if(((ProfileCreationFragment)fragment).isProfileDataValid()){
+                        Snackbar successSnackbar = Snackbar.make(getCurrentFocus(),"Successfully added new profile",Snackbar.LENGTH_SHORT);
+                        successSnackbar.show();
+                    }else{
+                        Snackbar failureSnackbar = Snackbar.make(getCurrentFocus(),"Information is either incomplete or faulty",Snackbar.LENGTH_SHORT);
+                        failureSnackbar.show();
+                    }
+                    //((ProfileCreationFragment) fragment).setErrorsDisabled();
                 }
             });
         }

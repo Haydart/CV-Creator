@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,9 @@ import android.widget.Toast;
 import com.example.radek.cv_creator.Profile;
 import com.example.radek.cv_creator.R;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Created by Radek on 2016-06-30.
  */
@@ -34,9 +38,21 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
     EditText dateOfBirthTIL;
     Profile newProfile; // the profile being created
 
-    static final int PHOTO_REQUEST_CODE = 1;
-    static final int DATE_PICKER_FEEDBACK_REQUEST_CODE = 1;
+    TextInputLayout firstName;
+    TextInputLayout lastName;
+    TextInputLayout dateOfBirth;
+    TextInputLayout emailAddress;
+    TextInputLayout phoneNumber;
 
+    private static final String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
+    private static final String NAME_PATTERN = "^[A-Z][a-zA-Z]*( )*$";
+    private static final String DOB_PATTERN = "^\\d{4}[-/\\s]?((((0[13578])|(1[02]))[-/\\s]?(([0-2][0-9])|(3[01])))|(((0[469])|(11))[-/\\s]?(([0-2][0-9])|(30)))|(02[-/\\s]?[0-2][0-9]))$";
+    private Pattern emailPattern = Pattern.compile(EMAIL_PATTERN);
+    private Pattern namePattern = Pattern.compile(NAME_PATTERN);
+    private Pattern dobPattern = Pattern.compile(DOB_PATTERN);
+    private Matcher matcher;
+
+    static final int PHOTO_REQUEST_CODE = 1;
 
     public ProfileCreationFragment() {
         // Required empty public constructor
@@ -48,6 +64,13 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
 
         newProfile = new Profile();
         dateOfBirthTIL = (EditText) getView().findViewById(R.id.textDialog3);
+
+        firstName = (TextInputLayout)getView().findViewById(R.id.til);
+        lastName = (TextInputLayout)getView().findViewById(R.id.til2);
+        dateOfBirth = (TextInputLayout)getView().findViewById(R.id.til3);
+        emailAddress = (TextInputLayout)getView().findViewById(R.id.til4);
+        phoneNumber = (TextInputLayout)getView().findViewById(R.id.til5);
+
         dateOfBirthTIL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,6 +121,51 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
                 photoImageView.setImageBitmap((Bitmap)bundle.get("data"));
             }
         }
+    }
+
+    public boolean isProfileDataValid(){
+        return invalidDataErrorsCount()==0;
+    }
+
+    private int invalidDataErrorsCount(){
+        return setInvalidDataErrors();
+    }
+
+    private int setInvalidDataErrors(){
+        int errorCount = 0;
+
+        if(!namePattern.matcher(firstName.getEditText().getText().toString()).matches()){
+            errorCount++;
+            firstName.setErrorEnabled(true);
+            firstName.setError("Invalid first name");
+        }
+
+        if(!namePattern.matcher(lastName.getEditText().getText().toString()).matches()){
+            errorCount++;
+            lastName.setErrorEnabled(true);
+            lastName.setError("Invalid last name");
+        }
+
+        if(!dobPattern.matcher(dateOfBirth.getEditText().getText().toString()).matches()){
+            errorCount++;
+            dateOfBirth.setErrorEnabled(true);
+            dateOfBirth.setError("Invalid date of birth");
+        }
+
+        if(!emailPattern.matcher(emailAddress.getEditText().getText().toString()).matches()){
+            errorCount++;
+            emailAddress.setErrorEnabled(true);
+            emailAddress.setError("Invalid e-mail address");
+        }
+
+        return errorCount;
+    }
+
+    public void setErrorsDisabled(){
+        firstName.setErrorEnabled(false);
+        lastName.setErrorEnabled(false);
+        dateOfBirth.setErrorEnabled(false);
+        emailAddress.setErrorEnabled(false);
     }
 
     @Override
