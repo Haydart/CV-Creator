@@ -7,15 +7,19 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.example.radek.cv_creator.Profile;
 import com.example.radek.cv_creator.R;
 
 /**
@@ -25,7 +29,11 @@ public class ProfileCreationFragment extends Fragment{
 
     FragmentActivity activity;
     ImageView photoImageView;
+    EditText dateOfBirthTIL;
+    Profile newProfile; // the profile being created
+
     static final int PHOTO_REQUEST_CODE = 1;
+    static final int DATE_PICKER_FEEDBACK_REQUEST_CODE = 1;
 
 
     public ProfileCreationFragment() {
@@ -36,6 +44,16 @@ public class ProfileCreationFragment extends Fragment{
     public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        newProfile = new Profile();
+        dateOfBirthTIL = (EditText) getView().findViewById(R.id.textDialog3);
+        dateOfBirthTIL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity().getApplicationContext(),"DOB clicked!!!",Toast.LENGTH_SHORT).show();
+                DialogFragment newFragment = new SelectDateFragment();
+                newFragment.show(activity.getSupportFragmentManager(), "DatePicker");
+            }
+        });
         photoImageView = (ImageView)getView().findViewById(R.id.profilePhotoImageView);
         photoImageView.setOnClickListener(new View.OnClickListener(){
 
@@ -55,7 +73,7 @@ public class ProfileCreationFragment extends Fragment{
         super.onAttach(context);
 
         try {
-
+            activity = (FragmentActivity)context;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " musi implementowac OnWyborOpcjiListener");
         }
@@ -75,6 +93,11 @@ public class ProfileCreationFragment extends Fragment{
             if(resultCode == Activity.RESULT_OK){
                 Bundle bundle = data.getExtras();
                 photoImageView.setImageBitmap((Bitmap)bundle.get("data"));
+            }
+        }else if(requestCode == DATE_PICKER_FEEDBACK_REQUEST_CODE){
+            if(resultCode == Activity.RESULT_OK){
+                Bundle bundle = data.getExtras();
+                //TODO: get DOB info to the actual profile object
             }
         }
     }

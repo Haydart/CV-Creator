@@ -1,7 +1,9 @@
 package com.example.radek.cv_creator;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -12,11 +14,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.view.menu.ActionMenuItem;
-import android.support.v7.view.menu.MenuItemImpl;
-import android.util.Log;
-import android.view.ActionProvider;
-import android.view.ContextMenu;
-import android.view.SubMenu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,6 +23,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -74,14 +73,6 @@ public class MainActivity extends AppCompatActivity implements
         userProfiles = getMockProfilesArrayList();
 
         setSupportActionBar(toolbar);
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         fab.setVisibility(View.GONE);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -165,6 +156,8 @@ public class MainActivity extends AppCompatActivity implements
             detachAllFragments();
 
             fab.setVisibility(View.VISIBLE);
+            fab.setImageBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(),
+                    R.drawable.ic_add_white_24dp));
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -180,7 +173,6 @@ public class MainActivity extends AppCompatActivity implements
             displayFragment(fragment);
 
         } else if (id == R.id.nav_cv_create) {
-            fab.setVisibility(View.INVISIBLE);
 
             detachAllFragments();
             getSupportActionBar().setTitle("Create new CV");
@@ -190,10 +182,25 @@ public class MainActivity extends AppCompatActivity implements
             fragment.setArguments(bundle);
             displayFragment(fragment);
 
+            fab.setVisibility(View.VISIBLE);
+            fab.setImageBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(),
+                    R.drawable.ic_check_white_24dp));
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //TODO: save data into shared prefs + add name of current profile
+                    hideKeyboard();
+                    Snackbar successSnackbar = Snackbar.make(getCurrentFocus(),"Successfully created new CV for CURRENT PROFILE",Snackbar.LENGTH_SHORT);
+                    successSnackbar.show();
+                }
+            });
+
         } else if (id == R.id.nav_manage_profiles) {
             detachAllFragments();
 
             fab.setVisibility(View.VISIBLE);
+            fab.setImageBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(),
+                    R.drawable.ic_add_white_24dp));
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -209,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements
             displayFragment(fragment);
 
         } else if (id == R.id.nav_profie_create) {
-            fab.setVisibility(View.INVISIBLE);
+
             detachAllFragments();
             getSupportActionBar().setTitle("Create new profile");
             Fragment fragment = new ProfileCreationFragment();
@@ -217,6 +224,19 @@ public class MainActivity extends AppCompatActivity implements
             bundle.putParcelableArrayList("profilesResource",userProfiles);
             fragment.setArguments(bundle);
             displayFragment(fragment);
+
+            fab.setVisibility(View.VISIBLE);
+            fab.setImageBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(),
+                    R.drawable.ic_check_white_24dp));
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //TODO: save data into shared prefs
+                    hideKeyboard();
+                    Snackbar successSnackbar = Snackbar.make(getCurrentFocus(),"Successfully added new profile",Snackbar.LENGTH_SHORT);
+                    successSnackbar.show();
+                }
+            });
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -226,9 +246,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onNoProfileButtonClick() {
-        fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentsRelativeLayout, new ProfileCreationFragment());
-        fragmentTransaction.commit();
+        onNavigationItemSelected(new ActionMenuItem(getApplicationContext(),0,R.id.nav_profie_create,0,0,""));
     }
 
     @Override
@@ -276,6 +294,14 @@ public class MainActivity extends AppCompatActivity implements
         result.add(profile);
         result.add(profile2);
         return result;
+    }
+
+    private void hideKeyboard() {
+        View view = getCurrentFocus();
+        if (view != null) {
+            ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).
+                    hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 
     @Override

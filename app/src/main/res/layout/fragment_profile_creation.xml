@@ -4,13 +4,111 @@
     android:layout_height="match_parent"
     tools:context="com.example.radek.cv_creator.fragments.ProfileCreationFragment">
 
+    <ScrollView android:id="@+id/scrollView1"
+        android:layout_width="fill_parent" android:layout_height="fill_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
     <!-- TODO: Update blank fragment layout -->
 
-    <ImageView
-        android:layout_width="256dp"
-        android:layout_height="256dp"
-        android:id="@+id/profilePhotoImageView"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context="com.hmkcode.inputtextlayout.MainActivity"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:background="#893c3c" />
+        android:layout_alignParentStart="true"
+        android:orientation="vertical"
+        android:id="@+id/linearLayout">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/textDialog"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="First Name"
+                android:capitalize="words"
+                android:maxLength="20"
+                android:maxLines="1"
+                android:lines="1"
+                android:longClickable="false"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/til">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/textDialog2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="Last Name"
+                android:capitalize="words"
+                android:maxLines="1"
+                android:maxLength="30"
+                android:lines="1"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+
+        <ImageView
+            android:layout_width="210dp"
+            android:layout_height="280dp"
+            android:id="@+id/profilePhotoImageView"
+            android:background="#e2e2e2"
+            android:layout_below="@+id/til2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="32dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:translationZ="8dp"
+            android:clickable="false"
+            android:layout_gravity="center"
+            android:src="@drawable/addphoto" />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til3"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/til3">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/textDialog3"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="Date of Birth"
+                android:maxLines="1"
+                android:maxLength="30"
+                android:lines="1"
+                android:singleLine="true"
+                android:enabled="true"
+                android:focusable="true"
+                android:clickable="true" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til4"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/til">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/textDialog4"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="Last Name"
+                android:capitalize="words"
+                android:maxLines="1"
+                android:maxLength="30"
+                android:lines="1"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+
+    </LinearLayout>
+    </ScrollView>
+
 </RelativeLayout>
