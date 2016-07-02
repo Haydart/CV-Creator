@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -51,8 +52,6 @@ public class MainActivity extends AppCompatActivity implements
     FloatingActionButton fab;
     DrawerLayout drawer;
     NavigationView navigationView;
-    Button photoButton;
-    ImageView imageView;
 
     ArrayList<Profile> userProfiles;
 
@@ -83,7 +82,6 @@ public class MainActivity extends AppCompatActivity implements
         navigationView.setNavigationItemSelectedListener(this);
 
         fragmentTransaction.add(R.id.fragmentsRelativeLayout, noProfilesFragment);
-        //fragmentTransaction.add(R.id.fragmentsRelativeLayout, cvCreationFragment);
         fragmentTransaction.attach(noProfilesFragment);
         fragmentTransaction.commit();
     }
@@ -128,7 +126,6 @@ public class MainActivity extends AppCompatActivity implements
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -139,12 +136,10 @@ public class MainActivity extends AppCompatActivity implements
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
             fab.setVisibility(View.INVISIBLE);
-            detachAllFragments();
             getSupportActionBar().setTitle("CV Creator");
             Bundle bundle = new Bundle();
             Fragment fragment =  new HomeFragment();
@@ -154,7 +149,6 @@ public class MainActivity extends AppCompatActivity implements
             displayFragment(homeFragment);
 
         } else if (id == R.id.nav_cv_manage) {
-            detachAllFragments();
 
             fab.setVisibility(View.VISIBLE);
             fab.setImageBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(),
@@ -175,8 +169,6 @@ public class MainActivity extends AppCompatActivity implements
             displayFragment(cvManagementFragment);
 
         } else if (id == R.id.nav_cv_create) {
-
-            detachAllFragments();
             getSupportActionBar().setTitle("Create new CV");
             Bundle bundle = new Bundle();
             Fragment fragment = new CVCreationFragment();
@@ -195,12 +187,11 @@ public class MainActivity extends AppCompatActivity implements
                     hideKeyboard();
                     Snackbar successSnackbar = Snackbar.make(getCurrentFocus(),"Successfully created new CV for CURRENT PROFILE",Snackbar.LENGTH_SHORT);
                     successSnackbar.show();
+                    onBackPressed();
                 }
             });
 
         } else if (id == R.id.nav_manage_profiles) {
-            detachAllFragments();
-
             fab.setVisibility(View.VISIBLE);
             fab.setImageBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(),
                     R.drawable.ic_add_white_24dp));
@@ -220,8 +211,6 @@ public class MainActivity extends AppCompatActivity implements
             displayFragment(profileManagementFragment);
 
         } else if (id == R.id.nav_profie_create) {
-
-            detachAllFragments();
             getSupportActionBar().setTitle("Create new profile");
             final Fragment fragment = new ProfileCreationFragment();
             Bundle bundle = new Bundle();
@@ -236,17 +225,17 @@ public class MainActivity extends AppCompatActivity implements
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //TODO: save data into shared prefs
                     ((ProfileCreationFragment)fragment).setErrorsDisabled();
                     hideKeyboard();
                     if(((ProfileCreationFragment)fragment).isProfileDataValid()){
                         Snackbar successSnackbar = Snackbar.make(getCurrentFocus(),"Successfully added new profile",Snackbar.LENGTH_SHORT);
                         successSnackbar.show();
+                        //TODO: save data into shared prefs
+                        onBackPressed();
                     }else{
                         Snackbar failureSnackbar = Snackbar.make(getCurrentFocus(),"Information is either incomplete or faulty",Snackbar.LENGTH_SHORT);
                         failureSnackbar.show();
                     }
-                    //((ProfileCreationFragment) fragment).setErrorsDisabled();
                 }
             });
         }
@@ -283,8 +272,9 @@ public class MainActivity extends AppCompatActivity implements
         if(!fragment.isAdded())
         getSupportFragmentManager()
                 .beginTransaction()
-                //.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
-                .replace(R.id.fragmentsRelativeLayout, fragment)
+//                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                .add(R.id.fragmentsRelativeLayout, fragment)
+                .replace(R.id.fragmentsRelativeLayout,fragment)
                 .addToBackStack(null)
                 .commit();
     }
