@@ -150,7 +150,8 @@ public class MainActivity extends AppCompatActivity implements
             Fragment fragment =  new HomeFragment();
             bundle.putParcelableArrayList("profilesResource",userProfiles);
             fragment.setArguments(bundle);
-            displayFragment(fragment);
+            homeFragment = (HomeFragment)fragment;
+            displayFragment(homeFragment);
 
         } else if (id == R.id.nav_cv_manage) {
             detachAllFragments();
@@ -170,7 +171,8 @@ public class MainActivity extends AppCompatActivity implements
             Fragment fragment = new CVManagementFragment();
             //bundle.putParcelableArrayList("profilesResource",userProfiles);
             fragment.setArguments(bundle);
-            displayFragment(fragment);
+            cvManagementFragment = (CVManagementFragment)fragment;
+            displayFragment(cvManagementFragment);
 
         } else if (id == R.id.nav_cv_create) {
 
@@ -180,7 +182,8 @@ public class MainActivity extends AppCompatActivity implements
             Fragment fragment = new CVCreationFragment();
             bundle.putParcelableArrayList("profilesResource",userProfiles);
             fragment.setArguments(bundle);
-            displayFragment(fragment);
+            cvCreationFragment = (CVCreationFragment)fragment;
+            displayFragment(cvCreationFragment);
 
             fab.setVisibility(View.VISIBLE);
             fab.setImageBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(),
@@ -213,7 +216,8 @@ public class MainActivity extends AppCompatActivity implements
             Bundle bundle = new Bundle();
             //bundle.putParcelableArrayList("profilesResource",userProfiles);
             fragment.setArguments(bundle);
-            displayFragment(fragment);
+            profileManagementFragment = (ProfileManagementFragment)fragment;
+            displayFragment(profileManagementFragment);
 
         } else if (id == R.id.nav_profie_create) {
 
@@ -223,7 +227,8 @@ public class MainActivity extends AppCompatActivity implements
             Bundle bundle = new Bundle();
             bundle.putParcelableArrayList("profilesResource",userProfiles);
             fragment.setArguments(bundle);
-            displayFragment(fragment);
+            profileCreationFragment = (ProfileCreationFragment)fragment;
+            displayFragment(profileCreationFragment);
 
             fab.setVisibility(View.VISIBLE);
             fab.setImageBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(),
