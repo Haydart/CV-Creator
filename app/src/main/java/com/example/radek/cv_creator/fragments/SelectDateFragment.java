@@ -23,9 +23,16 @@ public class SelectDateFragment extends DialogFragment implements DatePickerDial
 
     public void onDateSet(DatePicker view, int yy, int mm, int dd) {
         populateSetDate(yy, mm+1, dd);
+
+        EditDatePickerListener activity = (EditDatePickerListener) getTargetFragment();
+        activity.onFinishEditDatePickerDialog("data sent");
+        this.dismiss();
     }
     public void populateSetDate(int year, int month, int day) {
         //dob.setText(month+"/"+day+"/"+year);
     }
 
+    public interface EditDatePickerListener {
+        void onFinishEditDatePickerDialog(String inputText);
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.radek.cv_creator.fragments;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,6 +16,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -25,7 +27,7 @@ import com.example.radek.cv_creator.R;
 /**
  * Created by Radek on 2016-06-30.
  */
-public class ProfileCreationFragment extends Fragment{
+public class ProfileCreationFragment extends Fragment implements SelectDateFragment.EditDatePickerListener{
 
     FragmentActivity activity;
     ImageView photoImageView;
@@ -51,6 +53,7 @@ public class ProfileCreationFragment extends Fragment{
             public void onClick(View view) {
                 Toast.makeText(getActivity().getApplicationContext(),"DOB clicked!!!",Toast.LENGTH_SHORT).show();
                 DialogFragment newFragment = new SelectDateFragment();
+                newFragment.setTargetFragment(ProfileCreationFragment.this, 1);
                 newFragment.show(activity.getSupportFragmentManager(), "DatePicker");
             }
         });
@@ -94,17 +97,17 @@ public class ProfileCreationFragment extends Fragment{
                 Bundle bundle = data.getExtras();
                 photoImageView.setImageBitmap((Bitmap)bundle.get("data"));
             }
-        }else if(requestCode == DATE_PICKER_FEEDBACK_REQUEST_CODE){
-            if(resultCode == Activity.RESULT_OK){
-                Bundle bundle = data.getExtras();
-                //TODO: get DOB info to the actual profile object
-            }
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public void onFinishEditDatePickerDialog(String inputText) {
+        Toast.makeText(getContext(), "DATE PICKER FEEDBACK RECEIVED " + inputText, Toast.LENGTH_SHORT).show();
     }
 
     public interface OnProfileCreateFragmentClickListener
