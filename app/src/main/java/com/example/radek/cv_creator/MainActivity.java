@@ -11,6 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.view.menu.ActionMenuItem;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -76,9 +77,18 @@ public class MainActivity extends AppCompatActivity implements
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        fragmentTransaction.add(R.id.fragmentsRelativeLayout, noProfilesFragment);
-        fragmentTransaction.attach(noProfilesFragment);
+        fragmentTransaction.replace(R.id.fragmentsRelativeLayout,homeFragment);
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+
+        Snackbar noProfilesSnackbar = Snackbar.make(navigationView,"You have no created profiles",Snackbar.LENGTH_INDEFINITE);
+        noProfilesSnackbar.setAction("CREATE ONE", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MainActivity.this.onNavigationItemSelected(new ActionMenuItem(getApplicationContext(),0,R.id.nav_profie_create,0,0,""));
+            }
+        });
+        noProfilesSnackbar.show();
     }
 
     public void getReferences(){
@@ -105,8 +115,10 @@ public class MainActivity extends AppCompatActivity implements
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            if(getSupportFragmentManager().getBackStackEntryCount()==2)//fragment we are returning to is main?
+                fab.setVisibility(View.GONE);
+            }
             super.onBackPressed();
-        }
     }
 
     @Override
@@ -219,6 +231,7 @@ public class MainActivity extends AppCompatActivity implements
             fab.setVisibility(View.VISIBLE);
             fab.setImageBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(),
                     R.drawable.ic_check_white_24dp));
+
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -227,12 +240,13 @@ public class MainActivity extends AppCompatActivity implements
                     if(((ProfileCreationFragment)fragment).isProfileDataValid()){
                         Snackbar successSnackbar = Snackbar.make(getCurrentFocus(),"Successfully added new profile",Snackbar.LENGTH_SHORT);
                         successSnackbar.show();
-
                         profileCreationFragment.setProfileTraits();
                         userProfiles.add(profileCreationFragment.getNewProfile());
+                        fab.setVisibility(View.GONE);
+                        Log.d("USER PROFILES SIZE" , " " + userProfiles.size());
+
                         reloadUserProfiles();
                         Toast.makeText(getApplicationContext(), "Profiles reloaded", Toast.LENGTH_SHORT).show();
-
                         onBackPressed();
                     }else{
                         Snackbar failureSnackbar = Snackbar.make(getCurrentFocus(),"Information is either incomplete or faulty",Snackbar.LENGTH_SHORT);

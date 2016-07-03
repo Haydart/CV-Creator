@@ -22,7 +22,7 @@ public class Profile implements Serializable, Parcelable {
     private String phoneNumber;
     private String addressLine1;
     private String addressLine2;
-    private Bitmap photo;
+    private transient Bitmap photo; // bitmaps go to internal storage, we don`t want to have THAT much binary JSON data, do we?
 
     public Profile(){
 

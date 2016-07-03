@@ -2,7 +2,10 @@ package com.example.radek.cv_creator;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
+import android.support.v7.view.menu.ActionMenuItem;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +33,9 @@ public class ProfileChoiceSpinnerAdapter extends ArrayAdapter<Profile> {
         this.activity = activity;
         this.context = (Context)activity;
         this.profilesResource = profilesResource;
+
+        moveProfileCreationButtonToLastPosition();
+
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -40,7 +46,7 @@ public class ProfileChoiceSpinnerAdapter extends ArrayAdapter<Profile> {
         CircleImageView profileImageView = (CircleImageView) rowView.findViewById(R.id.profilePhotoImageViewMiniature);
 
         name.setText(profilesResource.get(position).getName());
-        //profileImageView.setImageBitmap(profilesResource.get(position).getPhoto());
+        profileImageView.setImageBitmap(profilesResource.get(position).getPhoto());
 
         return rowView;
     }
@@ -52,9 +58,31 @@ public class ProfileChoiceSpinnerAdapter extends ArrayAdapter<Profile> {
         TextView dropdownName = (TextView)dropDownView.findViewById(R.id.dropdownNameTextView);
         CircleImageView dropdownProfileImageView = (CircleImageView) dropDownView.findViewById(R.id.dropdownProfilePhotoImageViewMiniature);
 
-        dropdownName.setText(profilesResource.get(position).getName());
-        //dropdownProfileImageView.setImageBitmap(profilesResource.get(position).getPhoto());
+        if(position == profilesResource.size()-1){
+            dropdownName.setText("Create new profile");
+            dropDownView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((MainActivity)activity).onNavigationItemSelected(new ActionMenuItem(activity.getApplicationContext(),0,R.id.nav_profie_create,0,0,""));
+                }
+            });
+            dropdownProfileImageView.setImageBitmap(BitmapFactory.decodeResource(getContext().getResources(),R.drawable.ic_person_add_black_24dp));
+        }else{
+            dropdownName.setText(profilesResource.get(position).getName());
+            dropdownProfileImageView.setImageBitmap(profilesResource.get(position).getPhoto());
+        }
 
         return dropDownView;
+    }
+    private void moveProfileCreationButtonToLastPosition(){
+        boolean foundCreationButton = false;
+        for(int i=0;i<profilesResource.size()&&!foundCreationButton;i++){
+            if(profilesResource.get(i).equals(new Profile())){
+                foundCreationButton = true;
+                Log.d("EEEEEEEEEEEEEEE", "PROFILE EQUALS NEW EMPTY PROFILE");
+                profilesResource.remove(i);
+            }
+        }
+        profilesResource.add(new Profile());
     }
 }
