@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.example.radek.cv_creator.Profile;
 import com.example.radek.cv_creator.R;
 
+import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,6 +36,8 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
 
     FragmentActivity activity;
     ImageView photoImageView;
+    Bitmap photoBitmap;
+
     EditText dateOfBirthTIL;
     Profile newProfile; // the profile being created
 
@@ -53,6 +56,8 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
     private Matcher matcher;
 
     static final int PHOTO_REQUEST_CODE = 1;
+
+    boolean photoAdded = false;
 
     public ProfileCreationFragment() {
         // Required empty public constructor
@@ -80,6 +85,7 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
                 newFragment.show(activity.getSupportFragmentManager(), "DatePicker");
             }
         });
+
         photoImageView = (ImageView)getView().findViewById(R.id.profilePhotoImageView);
         photoImageView.setOnClickListener(new View.OnClickListener(){
 
@@ -91,7 +97,6 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
                 }
             }
         });
-
     }
 
     @Override
@@ -118,7 +123,9 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
         if(requestCode == PHOTO_REQUEST_CODE){
             if(resultCode == Activity.RESULT_OK){
                 Bundle bundle = data.getExtras();
-                photoImageView.setImageBitmap((Bitmap)bundle.get("data"));
+                photoBitmap = (Bitmap)bundle.get("data");
+                photoImageView.setImageBitmap(photoBitmap);
+                photoAdded = true;
             }
         }
     }
@@ -168,14 +175,22 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
         emailAddress.setErrorEnabled(false);
     }
 
+    public void setProfileTraits(){
+        if(photoAdded)
+            newProfile.setPhoto(photoBitmap);
+        newProfile.setName(firstName.getEditText().getText().toString() + " " + lastName.getEditText().getText().toString());
+        newProfile.setDOB(dateOfBirth.getEditText().getText().toString());
+        newProfile.setPhoneNumber(phoneNumber.getEditText().getText().toString());
+    }
+
     @Override
     public void onDetach() {
         super.onDetach();
     }
 
     @Override
-    public void onFinishEditDatePickerDialog(String inputText) {
-        Toast.makeText(getContext(), "DATE PICKER FEEDBACK RECEIVED " + inputText, Toast.LENGTH_SHORT).show();
+    public void onFinishEditDatePickerDialog(String dateText) {
+        dateOfBirthTIL.setText(dateText);
     }
 
     public interface OnProfileCreateFragmentClickListener

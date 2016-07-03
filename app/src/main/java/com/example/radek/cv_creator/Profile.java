@@ -6,7 +6,9 @@ import android.os.Parcelable;
 import android.util.Patterns;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.StringTokenizer;
 
 /**
  * Created by Radek on 2016-06-29.
@@ -14,7 +16,7 @@ import java.util.Date;
 public class Profile implements Serializable, Parcelable {
 
     private String name;
-    private Date DOB;
+    private String DOB;
     private String gender = "male";
     private String email;
     private String phoneNumber;
@@ -23,7 +25,7 @@ public class Profile implements Serializable, Parcelable {
     private Bitmap photo;
 
     public Profile(){
-        DOB = new Date();
+
     }
 
     protected Profile(Parcel in) {
@@ -66,12 +68,16 @@ public class Profile implements Serializable, Parcelable {
         this.gender = gender;
     }
 
-    public Date getDOB() {
+    public String getDOB() {
         return DOB;
     }
 
-    public void setDOB(Date DOB) {
+    public void setDOB(String DOB) {
         this.DOB = DOB;
+    }
+
+    public void setDOB(int day, int month, int year) {
+        this.DOB = String.valueOf(year) + String.valueOf(month) + String.valueOf(day);
     }
 
     public String getPhoneNumber() {
