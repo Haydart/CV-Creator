@@ -85,9 +85,7 @@ public class Profile implements Serializable, Parcelable {
     }
 
     public void setPhoneNumber(String phoneNumber) throws WrongDataFormatException{
-        if(phoneNumber.matches("(\\d{3}-){3}"))
-            this.phoneNumber = phoneNumber;
-        else throw new WrongDataFormatException("Wrong phone number, format must be xxx-xxx-xxx");
+        this.phoneNumber = phoneNumber;
     }
 
     public String getAddressLine1() {

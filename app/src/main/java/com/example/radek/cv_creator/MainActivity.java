@@ -1,15 +1,11 @@
 package com.example.radek.cv_creator;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -24,10 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.radek.cv_creator.fragments.CVCreationFragment;
@@ -37,6 +30,7 @@ import com.example.radek.cv_creator.fragments.NoProfilesFragment;
 import com.example.radek.cv_creator.fragments.ProfileCreationFragment;
 import com.example.radek.cv_creator.fragments.ProfileManagementFragment;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements
@@ -54,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements
     NavigationView navigationView;
 
     ArrayList<Profile> userProfiles;
+    SharedPrefsManager sharedPrefsManager;
 
     NoProfilesFragment noProfilesFragment;
     CVCreationFragment cvCreationFragment;
@@ -67,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        findRefs();
+        getReferences();
 
         userProfiles = getMockProfilesArrayList();
 
@@ -86,12 +81,14 @@ public class MainActivity extends AppCompatActivity implements
         fragmentTransaction.commit();
     }
 
-    public void findRefs(){
+    public void getReferences(){
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         fab = (FloatingActionButton) findViewById(R.id.fab);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         userProfiles = new ArrayList<>();
+
+        sharedPrefsManager = new SharedPrefsManager(getApplicationContext());
 
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         noProfilesFragment = new NoProfilesFragment();
@@ -230,7 +227,12 @@ public class MainActivity extends AppCompatActivity implements
                     if(((ProfileCreationFragment)fragment).isProfileDataValid()){
                         Snackbar successSnackbar = Snackbar.make(getCurrentFocus(),"Successfully added new profile",Snackbar.LENGTH_SHORT);
                         successSnackbar.show();
-                        //TODO: save data into shared prefs
+
+                        profileCreationFragment.setProfileTraits();
+                        userProfiles.add(profileCreationFragment.getNewProfile());
+                        reloadUserProfiles();
+                        Toast.makeText(getApplicationContext(), "Profiles reloaded", Toast.LENGTH_SHORT).show();
+
                         onBackPressed();
                     }else{
                         Snackbar failureSnackbar = Snackbar.make(getCurrentFocus(),"Information is either incomplete or faulty",Snackbar.LENGTH_SHORT);
@@ -304,6 +306,19 @@ public class MainActivity extends AppCompatActivity implements
             ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).
                     hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
+    }
+
+    private void loadProfiles(){
+        userProfiles = sharedPrefsManager.loadProfilesList();
+    }
+
+    private void saveProfiles(ArrayList<Profile> profiles){
+        sharedPrefsManager.saveProfilesList(profiles);
+    }
+
+    private void reloadUserProfiles(){
+        saveProfiles(userProfiles);
+        loadProfiles();
     }
 
     @Override

@@ -39,7 +39,7 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
     Bitmap photoBitmap;
 
     EditText dateOfBirthTIL;
-    Profile newProfile; // the profile being created
+    Profile newProfile;
 
     TextInputLayout firstName;
     TextInputLayout lastName;
@@ -61,6 +61,10 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
 
     public ProfileCreationFragment() {
         // Required empty public constructor
+    }
+
+    public Profile getNewProfile() {
+        return newProfile;
     }
 
     @Override
