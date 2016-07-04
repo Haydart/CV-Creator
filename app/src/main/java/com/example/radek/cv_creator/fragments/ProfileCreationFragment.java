@@ -18,6 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.radek.cv_creator.Profile;
@@ -41,9 +43,14 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
 
     TextInputLayout firstName;
     TextInputLayout lastName;
-    TextInputLayout dateOfBirth;
+    RadioGroup genderRadioGroup;
+    RadioButton checkedGender;
     TextInputLayout emailAddress;
     TextInputLayout phoneNumber;
+    TextInputLayout addressLine1;
+    TextInputLayout addressLine2;
+    TextInputLayout addressLine3;
+    TextInputLayout dateOfBirth;
 
     private static final String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
     private static final String NAME_PATTERN = "^[A-Z][a-zA-Z]*( )*$";
@@ -62,7 +69,16 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
     }
 
     public Profile getNewProfile() {
-        return newProfile;
+        return new Profile( firstName.getEditText().getText().toString() + " " + lastName.getEditText().getText().toString(),
+                            checkedGender.getText().toString(),
+                            emailAddress.getEditText().getText().toString(),
+                            phoneNumber.getEditText().getText().toString(),
+                            addressLine1.getEditText().getText().toString(),
+                            addressLine2.getEditText().getText().toString(),
+                            addressLine3.getEditText().getText().toString(),
+                            photoBitmap,
+                            dateOfBirth.getEditText().getText().toString()
+                            );
     }
 
     @Override
@@ -74,9 +90,24 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
 
         firstName = (TextInputLayout)getView().findViewById(R.id.til);
         lastName = (TextInputLayout)getView().findViewById(R.id.til2);
+
+        genderRadioGroup = (RadioGroup)getView().findViewById(R.id.genderRadioGroup);
+        genderRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                checkedGender = (RadioButton) getView().findViewById(genderRadioGroup.getCheckedRadioButtonId());
+            }
+        });
+
+        checkedGender = (RadioButton)getView().findViewById(R.id.genderRadioButton1);
+        checkedGender.setChecked(true);
+
         dateOfBirth = (TextInputLayout)getView().findViewById(R.id.til3);
         emailAddress = (TextInputLayout)getView().findViewById(R.id.til4);
         phoneNumber = (TextInputLayout)getView().findViewById(R.id.til5);
+        addressLine1 = (TextInputLayout)getView().findViewById(R.id.til6);
+        addressLine2 = (TextInputLayout)getView().findViewById(R.id.til7);
+        addressLine3 = (TextInputLayout)getView().findViewById(R.id.til8);
 
         dateOfBirthTIL.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,7 +156,7 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
         if(requestCode == PHOTO_REQUEST_CODE){
             if(resultCode == Activity.RESULT_OK){
                 Bundle bundle = data.getExtras();
-                photoBitmap = (Bitmap)bundle.get("data");
+                photoBitmap = Bitmap.createScaledBitmap((Bitmap)bundle.get("data"),600,800,false);
                 photoImageView.setImageBitmap(photoBitmap);
                 photoAdded = true;
             }
@@ -175,14 +206,6 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
         lastName.setErrorEnabled(false);
         dateOfBirth.setErrorEnabled(false);
         emailAddress.setErrorEnabled(false);
-    }
-
-    public void setProfileTraits(){
-        if(photoAdded)
-            newProfile.setPhoto(photoBitmap);
-        newProfile.setName(firstName.getEditText().getText().toString() + " " + lastName.getEditText().getText().toString());
-        newProfile.setDOB(dateOfBirth.getEditText().getText().toString());
-        newProfile.setPhoneNumber(phoneNumber.getEditText().getText().toString());
     }
 
     @Override

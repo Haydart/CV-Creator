@@ -15,14 +15,31 @@ import java.util.StringTokenizer;
  */
 public class Profile implements Serializable, Parcelable {
 
+    private static int instancesCount;
+    private int ID;
     private String name;
-    private String DOB;
-    private String gender = "male";
+    private String gender;
     private String email;
     private String phoneNumber;
     private String addressLine1;
     private String addressLine2;
+    private String addressLine3;
     private transient Bitmap photo; // bitmaps go to internal storage, we don`t want to have THAT much binary JSON data, do we?
+    private String DOB;
+
+    public Profile(String name, String gender, String email, String phoneNumber, String addressLine1, String addressLine2, String addressLine3, Bitmap photo, String DOB) {
+        instancesCount++;
+        this.ID = instancesCount;
+        this.name = name;
+        this.gender = gender;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.addressLine1 = addressLine1;
+        this.addressLine2 = addressLine2;
+        this.addressLine3 = addressLine3;
+        this.photo = photo;
+        this.DOB = DOB;
+    }
 
     public Profile(){
 
@@ -59,6 +76,15 @@ public class Profile implements Serializable, Parcelable {
             this.name = name;
         else throw new WrongDataFormatException("Wrong name");
     }
+
+    public String getAddressLine3() {
+        return addressLine3;
+    }
+
+    public void setAddressLine3(String addressLine3) {
+        this.addressLine3 = addressLine3;
+    }
+
 
     public String getGender() {
         return gender;

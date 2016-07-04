@@ -28,7 +28,7 @@
                 android:id="@+id/textDialog"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:hint="First Name"
+                android:hint="@string/til1"
                 android:capitalize="words"
                 android:maxLength="20"
                 android:maxLines="1"
@@ -47,7 +47,7 @@
                 android:id="@+id/textDialog2"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:hint="Last Name"
+                android:hint="@string/til2"
                 android:capitalize="words"
                 android:maxLines="1"
                 android:maxLength="30"
@@ -67,18 +67,47 @@
             android:layout_gravity="center"
             android:src="@drawable/addphoto" />
 
+        <RadioGroup
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/genderRadioGroup"
+            android:layout_marginTop="32dp"
+            android:gravity="center">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gender_option_1"
+                android:id="@+id/genderRadioButton1"
+                android:checked="false" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gender_option_2"
+                android:id="@+id/genderRadioButton2"
+                android:layout_gravity="center_horizontal" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gender_option_3"
+                android:id="@+id/genderRadioButton3" />
+        </RadioGroup>
+
         <android.support.design.widget.TextInputLayout
             android:id="@+id/til3"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/til3"
-            android:layout_marginTop="32dp">
+            android:layout_marginTop="16dp">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/textDialog3"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:hint="Date of Birth"
+                android:hint="@string/til3"
                 android:maxLines="1"
                 android:maxLength="30"
                 android:lines="1"
@@ -98,7 +127,7 @@
                 android:id="@+id/textDialog4"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:hint="E-mail address"
+                android:hint="@string/til4"
                 android:capitalize="words"
                 android:maxLines="1"
                 android:maxLength="35"
@@ -116,10 +145,64 @@
                 android:id="@+id/textDialog5"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:hint="Phone Number"
+                android:hint="@string/til5"
                 android:capitalize="words"
                 android:maxLines="1"
                 android:maxLength="15"
+                android:lines="1"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til6"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/til">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/textDialog6"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/til6"
+                android:capitalize="words"
+                android:maxLines="1"
+                android:maxLength="40"
+                android:lines="1"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til7"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/til">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/textDialog7"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/til7"
+                android:capitalize="words"
+                android:maxLines="1"
+                android:maxLength="40"
+                android:lines="1"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til8"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/til">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/textDialog8"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/til8"
+                android:capitalize="words"
+                android:maxLines="1"
+                android:maxLength="40"
                 android:lines="1"
                 android:singleLine="true" />
         </android.support.design.widget.TextInputLayout>

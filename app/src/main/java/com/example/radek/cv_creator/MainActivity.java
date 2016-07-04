@@ -1,6 +1,7 @@
 package com.example.radek.cv_creator;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -31,7 +32,6 @@ import com.example.radek.cv_creator.fragments.NoProfilesFragment;
 import com.example.radek.cv_creator.fragments.ProfileCreationFragment;
 import com.example.radek.cv_creator.fragments.ProfileManagementFragment;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements
@@ -47,9 +47,14 @@ public class MainActivity extends AppCompatActivity implements
     FloatingActionButton fab;
     DrawerLayout drawer;
     NavigationView navigationView;
+    private static AppCompatActivity instance;
+    public static AppCompatActivity getInstance(){
+        return instance;
+    }
 
     ArrayList<Profile> userProfiles;
-    SharedPrefsManager sharedPrefsManager;
+    ContentStorageManager contentStorageManager;
+    SQLiteDatabaseHelper database;
 
     NoProfilesFragment noProfilesFragment;
     CVCreationFragment cvCreationFragment;
@@ -63,9 +68,11 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        instance = this;
         getReferences();
 
         userProfiles = getMockProfilesArrayList();
+        database.getWritableDatabase();
 
         setSupportActionBar(toolbar);
         fab.setVisibility(View.GONE);
@@ -92,13 +99,15 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void getReferences(){
+        database = new SQLiteDatabaseHelper(this);
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         fab = (FloatingActionButton) findViewById(R.id.fab);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         userProfiles = new ArrayList<>();
 
-        sharedPrefsManager = new SharedPrefsManager(getApplicationContext());
+        contentStorageManager = ContentStorageManager.getInstance();
 
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         noProfilesFragment = new NoProfilesFragment();
@@ -240,12 +249,25 @@ public class MainActivity extends AppCompatActivity implements
                     if(((ProfileCreationFragment)fragment).isProfileDataValid()){
                         Snackbar successSnackbar = Snackbar.make(getCurrentFocus(),"Successfully added new profile",Snackbar.LENGTH_SHORT);
                         successSnackbar.show();
-                        profileCreationFragment.setProfileTraits();
-                        userProfiles.add(profileCreationFragment.getNewProfile());
+                        Profile newlyCreatedProfile;
+                        newlyCreatedProfile = profileCreationFragment.getNewProfile();
+                        userProfiles.add(newlyCreatedProfile);
+                        try{
+                            contentStorageManager.addProfileToDatabase(newlyCreatedProfile);
+                        }catch(SQLiteException ex){
+                            Snackbar sqlFailSnackBar = Snackbar.make(getCurrentFocus(),"Failed writing to database, sorry :/",Snackbar.LENGTH_SHORT);
+                            sqlFailSnackBar.setAction("REPORT BUG", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+
+                                }
+                            });
+                            sqlFailSnackBar.show();
+                        }
+
                         fab.setVisibility(View.GONE);
                         Log.d("USER PROFILES SIZE" , " " + userProfiles.size());
 
-                        reloadUserProfiles();
                         Toast.makeText(getApplicationContext(), "Profiles reloaded", Toast.LENGTH_SHORT).show();
                         onBackPressed();
                     }else{
@@ -323,11 +345,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void loadProfiles(){
-        userProfiles = sharedPrefsManager.loadProfilesList();
+        userProfiles = contentStorageManager.loadProfilesList();
     }
 
     private void saveProfiles(ArrayList<Profile> profiles){
-        sharedPrefsManager.saveProfilesList(profiles);
+        contentStorageManager.saveProfilesList(profiles);
     }
 
     private void reloadUserProfiles(){

@@ -9,4 +9,16 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="create_profile_button">Create one</string>
+    <string name="gender_option_1">Male</string>
+    <string name="gender_option_2">Female</string>
+    <string name="gender_option_3">Other</string>
+    <string name="til1">First Name</string>
+    <string name="til2">Last Name</string>
+    <string name="til3">Date of birth</string>
+    <string name="til4">E-mail address</string>
+    <string name="til5">Phone number</string>
+    <string name="til6">Address Line 1</string>
+    <string name="til7">Address Line 2</string>
+    <string name="til8">Address Line 3</string>
+
 </resources>
