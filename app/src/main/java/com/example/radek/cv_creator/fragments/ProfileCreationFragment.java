@@ -112,7 +112,6 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
         dateOfBirthTIL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity().getApplicationContext(),"DOB clicked!!!",Toast.LENGTH_SHORT).show();
                 DialogFragment newFragment = new SelectDateFragment();
                 newFragment.setTargetFragment(ProfileCreationFragment.this, 1);
                 newFragment.show(activity.getSupportFragmentManager(), "DatePicker");
@@ -156,7 +155,7 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
         if(requestCode == PHOTO_REQUEST_CODE){
             if(resultCode == Activity.RESULT_OK){
                 Bundle bundle = data.getExtras();
-                photoBitmap = Bitmap.createScaledBitmap((Bitmap)bundle.get("data"),600,800,false);
+                photoBitmap = Bitmap.createScaledBitmap((Bitmap)bundle.get("data"),300,400,false);
                 photoImageView.setImageBitmap(photoBitmap);
                 photoAdded = true;
             }

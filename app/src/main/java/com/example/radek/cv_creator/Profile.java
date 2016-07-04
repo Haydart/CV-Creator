@@ -41,6 +41,19 @@ public class Profile implements Serializable, Parcelable {
         this.DOB = DOB;
     }
 
+    public Profile(int ID, String name, String gender, String email, String phoneNumber, String addressLine1, String addressLine2, String addressLine3, Bitmap photo, String DOB) {
+        this.ID = ID;
+        this.name = name;
+        this.gender = gender;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.addressLine1 = addressLine1;
+        this.addressLine2 = addressLine2;
+        this.addressLine3 = addressLine3;
+        this.photo = photo;
+        this.DOB = DOB;
+    }
+
     public Profile(){
 
     }
@@ -66,6 +79,14 @@ public class Profile implements Serializable, Parcelable {
             return new Profile[size];
         }
     };
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID){
+        this.ID = ID;
+    }
 
     public String getName() {
         return name;

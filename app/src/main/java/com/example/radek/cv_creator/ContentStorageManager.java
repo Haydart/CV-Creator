@@ -3,10 +3,13 @@ package com.example.radek.cv_creator;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.DatabaseErrorHandler;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.ObjectConstructor;
@@ -83,16 +86,56 @@ public class ContentStorageManager
         cv.put(DatabaseConstants.COLUMN_ADDRESS_1, profile.getAddressLine1());
         cv.put(DatabaseConstants.COLUMN_ADDRESS_2, profile.getAddressLine2());
         cv.put(DatabaseConstants.COLUMN_ADDRESS_3, profile.getAddressLine3());
-        cv.put(DatabaseConstants.COLUMN_PHOTO , DbBitmapUtility.getBytes(profile.getPhoto()));
         cv.put(DatabaseConstants.COLUMN_DOB, profile.getDOB());
+
+        if(profile.getPhoto()!=null)
+            cv.put(DatabaseConstants.COLUMN_PHOTO , DbBitmapUtility.getBytes(profile.getPhoto()));
 
         database.insert(DatabaseConstants.PROFILE_TABLE, null, cv );
         database.close();
     }
 
+    public void deleteAllProfileRecords(){
+        database = dbHelper.getWritableDatabase();
+        database.delete(DatabaseConstants.PROFILE_TABLE,null,null);
+    }
+
     public ArrayList getProfilesFromDatabase(){
         ArrayList<Profile> profiles = new ArrayList<>();
         database = dbHelper.getReadableDatabase();
+
+        String[] projection = {
+           DatabaseConstants.COLUMN_ID,
+                DatabaseConstants.COLUMN_NAME,
+                DatabaseConstants.COLUMN_GENDER,
+                DatabaseConstants.COLUMN_EMAIL,
+                DatabaseConstants.COLUMN_PHONE_NUMBER,
+                DatabaseConstants.COLUMN_ADDRESS_1,
+                DatabaseConstants.COLUMN_ADDRESS_2,
+                DatabaseConstants.COLUMN_ADDRESS_3,
+                DatabaseConstants.COLUMN_PHOTO,
+                DatabaseConstants.COLUMN_DOB
+        };
+
+        Cursor cursor = database.rawQuery("SELECT * FROM " + DatabaseConstants.PROFILE_TABLE, null);
+        cursor.moveToFirst();
+
+        while(!cursor.isAfterLast()){
+            profiles.add(new Profile(
+                    cursor.getInt(cursor.getColumnIndex(DatabaseConstants.COLUMN_ID)),
+                    cursor.getString(cursor.getColumnIndex(DatabaseConstants.COLUMN_NAME)),
+                    cursor.getString(cursor.getColumnIndex(DatabaseConstants.COLUMN_GENDER)),
+                    cursor.getString(cursor.getColumnIndex(DatabaseConstants.COLUMN_EMAIL)),
+                    cursor.getString(cursor.getColumnIndex(DatabaseConstants.COLUMN_PHONE_NUMBER)),
+                    cursor.getString(cursor.getColumnIndex(DatabaseConstants.COLUMN_ADDRESS_1)),
+                    cursor.getString(cursor.getColumnIndex(DatabaseConstants.COLUMN_ADDRESS_2)),
+                    cursor.getString(cursor.getColumnIndex(DatabaseConstants.COLUMN_ADDRESS_3)),
+                    DbBitmapUtility.getImage(cursor.getBlob(cursor.getColumnIndex(DatabaseConstants.COLUMN_PHOTO))),
+                    cursor.getString(cursor.getColumnIndex(DatabaseConstants.COLUMN_DOB))
+            ));
+            cursor.moveToNext();
+        }
+        database.close();
 
         return profiles;
     }

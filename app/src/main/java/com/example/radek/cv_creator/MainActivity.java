@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements
 
     ArrayList<Profile> userProfiles;
     ContentStorageManager contentStorageManager;
-    SQLiteDatabaseHelper database;
 
     NoProfilesFragment noProfilesFragment;
     CVCreationFragment cvCreationFragment;
@@ -71,8 +70,9 @@ public class MainActivity extends AppCompatActivity implements
         instance = this;
         getReferences();
 
-        userProfiles = getMockProfilesArrayList();
-        database.getWritableDatabase();
+        //contentStorageManager.deleteAllProfileRecords();
+        userProfiles = contentStorageManager.getProfilesFromDatabase();
+        Toast.makeText(getApplicationContext(), "Imported profiles from database", Toast.LENGTH_SHORT).show();
 
         setSupportActionBar(toolbar);
         fab.setVisibility(View.GONE);
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
-        Snackbar noProfilesSnackbar = Snackbar.make(navigationView,"You have no created profiles",Snackbar.LENGTH_INDEFINITE);
+        Snackbar noProfilesSnackbar = Snackbar.make(navigationView,"You have no created profiles",Snackbar.LENGTH_LONG);
         noProfilesSnackbar.setAction("CREATE ONE", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,8 +99,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void getReferences(){
-        database = new SQLiteDatabaseHelper(this);
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         fab = (FloatingActionButton) findViewById(R.id.fab);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
