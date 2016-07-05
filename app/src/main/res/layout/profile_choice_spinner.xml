@@ -11,7 +11,7 @@
         android:id="@+id/nameTextView"
         android:layout_gravity="center_horizontal"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/profilePhotoImageViewMiniature"
+        android:layout_toEndOf="@+id/manageProfilesPhotoImageViewMiniature"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="28dp"
@@ -19,7 +19,7 @@
 
     <com.mikhaellopez.circularimageview.CircularImageView
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/profilePhotoImageViewMiniature"
+        android:id="@+id/manageProfilesPhotoImageViewMiniature"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"

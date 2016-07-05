@@ -75,9 +75,22 @@ public class MainActivity extends AppCompatActivity implements
         instance = this;
         getReferences();
 
-        //contentStorageManager.deleteAllProfileRecords();
         userProfiles = contentStorageManager.getProfilesFromDatabase();
-        Toast.makeText(getApplicationContext(), "Imported profiles from database", Toast.LENGTH_SHORT).show();
+        if(userProfiles.size()==0 | userProfiles==null){
+
+            Snackbar noProfilesSnackbar = Snackbar.make(navigationView,"You have no created profiles",Snackbar.LENGTH_LONG);
+            noProfilesSnackbar.setAction("CREATE ONE", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    MainActivity.this.onNavigationItemSelected(new ActionMenuItem(getApplicationContext(),0,R.id.nav_profie_create,0,0,""));
+                }
+            });
+            noProfilesSnackbar.show();
+
+        }else{
+            Snackbar successfulImportSnackbar = Snackbar.make(navigationView,"Profiles successfully loaded from database",Snackbar.LENGTH_SHORT);
+            successfulImportSnackbar.show();
+        }
 
         setSupportActionBar(toolbar);
         fab.setVisibility(View.GONE);
@@ -93,15 +106,6 @@ public class MainActivity extends AppCompatActivity implements
         fragmentTransaction.addToBackStack(String.valueOf(homeFragment.getId()));
         currentFragmentId = homeFragment.getId();
         fragmentTransaction.commit();
-
-        Snackbar noProfilesSnackbar = Snackbar.make(navigationView,"You have no created profiles",Snackbar.LENGTH_LONG);
-        noProfilesSnackbar.setAction("CREATE ONE", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MainActivity.this.onNavigationItemSelected(new ActionMenuItem(getApplicationContext(),0,R.id.nav_profie_create,0,0,""));
-            }
-        });
-        noProfilesSnackbar.show();
     }
 
     public void getReferences(){
@@ -130,8 +134,12 @@ public class MainActivity extends AppCompatActivity implements
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
-            handleFabAndActionBarTitle(fragmentManager.findFragmentById(R.id.fragmentsRelativeLayout));
+            if(getSupportFragmentManager().getBackStackEntryCount()==1)
+                finish();
+            else{
+                super.onBackPressed();
+                handleFabAndActionBarTitle(fragmentManager.findFragmentById(R.id.fragmentsRelativeLayout));
+            }
         }
     }
 
@@ -188,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements
         } else if (id == R.id.nav_manage_profiles) {
             Fragment fragment = new ProfileManagementFragment();
             Bundle bundle = new Bundle();
-            //bundle.putParcelableArrayList("profilesResource",userProfiles);
+            bundle.putParcelableArrayList("profilesResource",userProfiles);
             fragment.setArguments(bundle);
             profileManagementFragment = (ProfileManagementFragment)fragment;
             displayFragment(profileManagementFragment);

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/material_grey_50">
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/manageProfilesPhotoImageViewMiniature"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:src="@drawable/blank_profile_pic"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_margin="5dp"
+        app:civ_border_color="@color/circularImageViewBorder"
+        app:civ_border_width="3dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="name"
+        android:id="@+id/manageProfilesNameTextView"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/manageProfilesPhotoImageViewMiniature"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="27dp"
+        android:layout_marginBottom="0dp"
+        android:textSize="16dp"
+        android:textColor="#000000" />
+
+</RelativeLayout>

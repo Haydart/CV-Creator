@@ -2,20 +2,15 @@ package com.example.radek.cv_creator;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
-import android.support.v7.view.menu.ActionMenuItem;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.mikhaellopez.circularimageview.CircularImageView;
 
@@ -44,7 +39,7 @@ public class ProfileChoiceSpinnerAdapter extends ArrayAdapter<Profile> {
     public View getView(int position, View convertView, ViewGroup parent) {
         final View rowView = inflater.inflate(R.layout.profile_choice_spinner, parent, false);
         TextView name = (TextView)rowView.findViewById(R.id.nameTextView);
-        CircularImageView profileImageView = (CircularImageView) rowView.findViewById(R.id.profilePhotoImageViewMiniature);
+        CircularImageView profileImageView = (CircularImageView) rowView.findViewById(R.id.manageProfilesPhotoImageViewMiniature);
 
         name.setText(profilesResource.get(position).getName());
         profileImageView.setImageBitmap(profilesResource.get(position).getPhoto());

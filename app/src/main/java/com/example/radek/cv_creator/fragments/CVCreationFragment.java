@@ -40,7 +40,6 @@ public class CVCreationFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         profilesResource = new ArrayList<>();
-        Log.d("BBBBBBBBBBBBBBBBBBB", "CVCreation fragment attached!!!!!!!!!!!!!");
 
         try {
             onCVCreationListener = (OnCVCreationListener) context;
