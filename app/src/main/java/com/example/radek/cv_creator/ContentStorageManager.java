@@ -130,7 +130,10 @@ public class ContentStorageManager
                     cursor.getString(cursor.getColumnIndex(DatabaseConstants.COLUMN_ADDRESS_1)),
                     cursor.getString(cursor.getColumnIndex(DatabaseConstants.COLUMN_ADDRESS_2)),
                     cursor.getString(cursor.getColumnIndex(DatabaseConstants.COLUMN_ADDRESS_3)),
+
+                    cursor.getBlob(cursor.getColumnIndex(DatabaseConstants.COLUMN_PHOTO))==null?null:
                     DbBitmapUtility.getImage(cursor.getBlob(cursor.getColumnIndex(DatabaseConstants.COLUMN_PHOTO))),
+
                     cursor.getString(cursor.getColumnIndex(DatabaseConstants.COLUMN_DOB))
             ));
             cursor.moveToNext();

@@ -1,5 +1,6 @@
 package com.example.radek.cv_creator;
 
+import android.app.LauncherActivity;
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -13,7 +14,7 @@ import java.util.StringTokenizer;
 /**
  * Created by Radek on 2016-06-29.
  */
-public class Profile implements Serializable, Parcelable {
+public class Profile implements Serializable, Parcelable{
 
     private static int instancesCount;
     private int ID;

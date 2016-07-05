@@ -40,6 +40,7 @@ public class CVCreationFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         profilesResource = new ArrayList<>();
+        Log.d("BBBBBBBBBBBBBBBBBBB", "CVCreation fragment attached!!!!!!!!!!!!!");
 
         try {
             onCVCreationListener = (OnCVCreationListener) context;
@@ -80,7 +81,6 @@ public class CVCreationFragment extends Fragment {
         View fragmentView = inflater.inflate(R.layout.fragment_cvcreation, container, false);
         profileChoiceSpinner = (Spinner) fragmentView.findViewById(R.id.profileChoiceSpinner);
         profilesResource = (ArrayList<Profile>) args.get("profilesResource");
-
         profileChoiceSpinnerAdapter = new ProfileChoiceSpinnerAdapter(getActivity(), profilesResource);
         profileChoiceSpinnerAdapter.setDropDownViewResource(R.layout.profile_choice_spinner);
         profileChoiceSpinner.setAdapter(profileChoiceSpinnerAdapter);
@@ -101,5 +101,4 @@ public class CVCreationFragment extends Fragment {
     public interface OnCVCreationListener{
         void onCVCreated();
     }
-
 }

@@ -25,7 +25,7 @@ public class SelectDateFragment extends DialogFragment implements DatePickerDial
         populateSetDate(yy, mm+1, dd);
 
         EditDatePickerListener callingFragment = (EditDatePickerListener) getTargetFragment();
-        callingFragment.onFinishEditDatePickerDialog(String.valueOf(yy) + "-" + ((mm<10)?"0":"") + String.valueOf(mm) + "-" + String.valueOf(dd));
+        callingFragment.onFinishEditDatePickerDialog(String.valueOf(yy) + "-" + ((mm<10)?"0":"") + String.valueOf(mm) + "-" +((dd<10)?"0":"") + String.valueOf(dd));
         this.dismiss();
     }
     public void populateSetDate(int year, int month, int day) {

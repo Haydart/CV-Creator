@@ -34,7 +34,8 @@
                 android:maxLines="1"
                 android:lines="1"
                 android:longClickable="false"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:selectAllOnFocus="true" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -52,7 +53,8 @@
                 android:maxLines="1"
                 android:maxLength="30"
                 android:lines="1"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:selectAllOnFocus="true" />
         </android.support.design.widget.TextInputLayout>
 
         <ImageView
@@ -73,7 +75,8 @@
             android:orientation="horizontal"
             android:id="@+id/genderRadioGroup"
             android:layout_marginTop="32dp"
-            android:gravity="center">
+            android:gravity="center"
+            android:layout_marginBottom="32dp">
 
             <RadioButton
                 android:layout_width="wrap_content"
@@ -96,26 +99,45 @@
                 android:id="@+id/genderRadioButton3" />
         </RadioGroup>
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/til3"
+        <RelativeLayout
+            android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/til3"
-            android:layout_marginTop="16dp">
+            android:layout_height="wrap_content">
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/textDialog3"
-                android:layout_width="fill_parent"
+
+            <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:text="New Button"
+                android:id="@+id/DOBDialogButton"
+                android:src="@android:drawable/ic_menu_today"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/til3"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="@string/til3"
-                android:maxLines="1"
-                android:maxLength="30"
-                android:lines="1"
-                android:singleLine="true"
-                android:enabled="true"
-                android:focusable="true"
-                android:clickable="true" />
-        </android.support.design.widget.TextInputLayout>
+                android:layout_toStartOf="@id/DOBDialogButton"
+                android:layout_alignParentEnd="false"
+                android:layout_alignParentStart="true">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/textDialog3"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/til3"
+                    android:maxLines="1"
+                    android:maxLength="30"
+                    android:lines="1"
+                    android:singleLine="true"
+                    android:enabled="true"
+                    android:focusable="true"
+                    android:clickable="true"
+                    android:selectAllOnFocus="true" />
+            </android.support.design.widget.TextInputLayout>
+
+        </RelativeLayout>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/til4"
@@ -128,11 +150,13 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/til4"
-                android:capitalize="words"
                 android:maxLines="1"
                 android:maxLength="35"
                 android:lines="1"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:enabled="true"
+                android:editable="true"
+                android:selectAllOnFocus="true" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -150,7 +174,8 @@
                 android:maxLines="1"
                 android:maxLength="15"
                 android:lines="1"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:selectAllOnFocus="true" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -168,7 +193,8 @@
                 android:maxLines="1"
                 android:maxLength="40"
                 android:lines="1"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:selectAllOnFocus="true" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -186,7 +212,8 @@
                 android:maxLines="1"
                 android:maxLength="40"
                 android:lines="1"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:selectAllOnFocus="true" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -204,7 +231,8 @@
                 android:maxLines="1"
                 android:maxLength="40"
                 android:lines="1"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:selectAllOnFocus="true" />
         </android.support.design.widget.TextInputLayout>
 
     </LinearLayout>

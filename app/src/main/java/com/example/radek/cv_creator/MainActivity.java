@@ -1,5 +1,6 @@
 package com.example.radek.cv_creator;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
@@ -33,6 +34,7 @@ import com.example.radek.cv_creator.fragments.ProfileCreationFragment;
 import com.example.radek.cv_creator.fragments.ProfileManagementFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
@@ -63,6 +65,9 @@ public class MainActivity extends AppCompatActivity implements
     HomeFragment homeFragment;
     FragmentTransaction fragmentTransaction;
 
+    int currentFragmentId;
+    int previousFragmentId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +90,8 @@ public class MainActivity extends AppCompatActivity implements
         navigationView.setNavigationItemSelectedListener(this);
 
         fragmentTransaction.replace(R.id.fragmentsRelativeLayout,homeFragment);
-        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.addToBackStack(String.valueOf(homeFragment.getId()));
+        currentFragmentId = homeFragment.getId();
         fragmentTransaction.commit();
 
         Snackbar noProfilesSnackbar = Snackbar.make(navigationView,"You have no created profiles",Snackbar.LENGTH_LONG);
@@ -119,13 +125,14 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            if(getSupportFragmentManager().getBackStackEntryCount()==2)//fragment we are returning to is main?
-                fab.setVisibility(View.GONE);
-            }
             super.onBackPressed();
+            handleFabAndActionBarTitle(fragmentManager.findFragmentById(R.id.fragmentsRelativeLayout));
+        }
     }
 
     @Override
@@ -155,8 +162,6 @@ public class MainActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            fab.setVisibility(View.INVISIBLE);
-            getSupportActionBar().setTitle("CV Creator");
             Bundle bundle = new Bundle();
             Fragment fragment =  new HomeFragment();
             bundle.putParcelableArrayList("profilesResource",userProfiles);
@@ -165,18 +170,6 @@ public class MainActivity extends AppCompatActivity implements
             displayFragment(homeFragment);
 
         } else if (id == R.id.nav_cv_manage) {
-
-            fab.setVisibility(View.VISIBLE);
-            fab.setImageBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(),
-                    R.drawable.ic_add_white_24dp));
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onNavigationItemSelected(new ActionMenuItem(getApplicationContext(),0,R.id.nav_cv_create,0,0,""));
-                }
-            });
-
-            getSupportActionBar().setTitle("Manage existing CVs");
             Bundle bundle = new Bundle();
             Fragment fragment = new CVManagementFragment();
             //bundle.putParcelableArrayList("profilesResource",userProfiles);
@@ -185,7 +178,6 @@ public class MainActivity extends AppCompatActivity implements
             displayFragment(cvManagementFragment);
 
         } else if (id == R.id.nav_cv_create) {
-            getSupportActionBar().setTitle("Create new CV");
             Bundle bundle = new Bundle();
             Fragment fragment = new CVCreationFragment();
             bundle.putParcelableArrayList("profilesResource",userProfiles);
@@ -193,32 +185,7 @@ public class MainActivity extends AppCompatActivity implements
             cvCreationFragment = (CVCreationFragment)fragment;
             displayFragment(cvCreationFragment);
 
-            fab.setVisibility(View.VISIBLE);
-            fab.setImageBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(),
-                    R.drawable.ic_check_white_24dp));
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //TODO: save data into shared prefs + add name of current profile
-                    hideKeyboard();
-                    Snackbar successSnackbar = Snackbar.make(getCurrentFocus(),"Successfully created new CV for CURRENT PROFILE",Snackbar.LENGTH_SHORT);
-                    successSnackbar.show();
-                    onBackPressed();
-                }
-            });
-
         } else if (id == R.id.nav_manage_profiles) {
-            fab.setVisibility(View.VISIBLE);
-            fab.setImageBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(),
-                    R.drawable.ic_add_white_24dp));
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onNavigationItemSelected(new ActionMenuItem(getApplicationContext(),0,R.id.nav_profie_create,0,0,""));
-                }
-            });
-
-            getSupportActionBar().setTitle("Manage existing profiles");
             Fragment fragment = new ProfileManagementFragment();
             Bundle bundle = new Bundle();
             //bundle.putParcelableArrayList("profilesResource",userProfiles);
@@ -227,53 +194,12 @@ public class MainActivity extends AppCompatActivity implements
             displayFragment(profileManagementFragment);
 
         } else if (id == R.id.nav_profie_create) {
-            getSupportActionBar().setTitle("Create new profile");
             final Fragment fragment = new ProfileCreationFragment();
             Bundle bundle = new Bundle();
-            bundle.putParcelableArrayList("profilesResource",userProfiles);
+            bundle.putParcelableArrayList("profilesResource", userProfiles);
             fragment.setArguments(bundle);
-            profileCreationFragment = (ProfileCreationFragment)fragment;
+            profileCreationFragment = (ProfileCreationFragment) fragment;
             displayFragment(profileCreationFragment);
-
-            fab.setVisibility(View.VISIBLE);
-            fab.setImageBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(),
-                    R.drawable.ic_check_white_24dp));
-
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ((ProfileCreationFragment)fragment).setErrorsDisabled();
-                    hideKeyboard();
-                    if(((ProfileCreationFragment)fragment).isProfileDataValid()){
-                        Snackbar successSnackbar = Snackbar.make(getCurrentFocus(),"Successfully added new profile",Snackbar.LENGTH_SHORT);
-                        successSnackbar.show();
-                        Profile newlyCreatedProfile;
-                        newlyCreatedProfile = profileCreationFragment.getNewProfile();
-                        userProfiles.add(newlyCreatedProfile);
-                        try{
-                            contentStorageManager.addProfileToDatabase(newlyCreatedProfile);
-                        }catch(SQLiteException ex){
-                            Snackbar sqlFailSnackBar = Snackbar.make(getCurrentFocus(),"Failed writing to database, sorry :/",Snackbar.LENGTH_SHORT);
-                            sqlFailSnackBar.setAction("REPORT BUG", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-
-                                }
-                            });
-                            sqlFailSnackBar.show();
-                        }
-
-                        fab.setVisibility(View.GONE);
-                        Log.d("USER PROFILES SIZE" , " " + userProfiles.size());
-
-                        Toast.makeText(getApplicationContext(), "Profiles reloaded", Toast.LENGTH_SHORT).show();
-                        onBackPressed();
-                    }else{
-                        Snackbar failureSnackbar = Snackbar.make(getCurrentFocus(),"Information is either incomplete or faulty",Snackbar.LENGTH_SHORT);
-                        failureSnackbar.show();
-                    }
-                }
-            });
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -305,7 +231,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void displayFragment(Fragment fragment){
-        if(!fragment.isAdded())
+        handleFabAndActionBarTitle(fragment);
         getSupportFragmentManager()
                 .beginTransaction()
 //                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
@@ -339,6 +265,95 @@ public class MainActivity extends AppCompatActivity implements
         if (view != null) {
             ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).
                     hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
+
+    private void handleFabAndActionBarTitle(final Fragment currentFragment){
+        if(currentFragment instanceof HomeFragment){
+            fab.setVisibility(View.GONE);
+            getSupportActionBar().setTitle("CV Creator");
+
+        }else if(currentFragment instanceof CVManagementFragment){
+            getSupportActionBar().setTitle("Manage CVs");
+            fab.setVisibility(View.VISIBLE);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onNavigationItemSelected(new ActionMenuItem(getApplicationContext(),0,R.id.nav_cv_create,0,0,""));
+                }
+            });
+            fab.setImageBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(),
+                    R.drawable.ic_add_white_24dp));
+
+        }else if(currentFragment instanceof CVCreationFragment){
+            getSupportActionBar().setTitle("Create new CV");
+            fab.setVisibility(View.VISIBLE);
+            fab.setImageBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(),
+                    R.drawable.ic_check_white_24dp));
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //TODO: save data into shared prefs + add name of current profile
+                    hideKeyboard();
+                    Snackbar successSnackbar = Snackbar.make(getCurrentFocus(),"Successfully created new CV for CURRENT PROFILE",Snackbar.LENGTH_SHORT);
+                    successSnackbar.show();
+                    onBackPressed();
+                }
+            });
+
+        }else if(currentFragment instanceof ProfileManagementFragment){
+            getSupportActionBar().setTitle("Manage profiles");
+            fab.setVisibility(View.VISIBLE);
+            fab.setImageBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(),
+                    R.drawable.ic_add_white_24dp));
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onNavigationItemSelected(new ActionMenuItem(getApplicationContext(),0,R.id.nav_profie_create,0,0,""));
+                }
+            });
+
+        }else if(currentFragment instanceof ProfileCreationFragment){
+            getSupportActionBar().setTitle("Create new profile");
+            fab.setVisibility(View.VISIBLE);
+            fab.setImageBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(),
+                    R.drawable.ic_check_white_24dp));
+
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((ProfileCreationFragment) currentFragment).setErrorsDisabled();
+                    hideKeyboard();
+                    if (((ProfileCreationFragment) currentFragment).isProfileDataValid()) {
+                        Snackbar successSnackbar = Snackbar.make(getCurrentFocus(), "Successfully added new profile", Snackbar.LENGTH_SHORT);
+                        successSnackbar.show();
+                        Profile newlyCreatedProfile;
+                        newlyCreatedProfile = profileCreationFragment.getNewProfile();
+                        userProfiles.add(newlyCreatedProfile);
+                        try {
+                            contentStorageManager.addProfileToDatabase(newlyCreatedProfile);
+                        } catch (SQLiteException ex) {
+                            Snackbar sqlFailSnackBar = Snackbar.make(getCurrentFocus(), "Failed writing to database, sorry :/", Snackbar.LENGTH_SHORT);
+                            sqlFailSnackBar.setAction("REPORT BUG", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+
+                                }
+                            });
+                            sqlFailSnackBar.show();
+                        }
+
+                        fab.setVisibility(View.GONE);
+                        Log.d("USER PROFILES SIZE", " " + userProfiles.size());
+
+                        Toast.makeText(getApplicationContext(), "Profiles reloaded", Toast.LENGTH_SHORT).show();
+                        onBackPressed();
+                    } else {
+                        Snackbar failureSnackbar = Snackbar.make(getCurrentFocus(), "Information is either incomplete or faulty", Snackbar.LENGTH_SHORT);
+                        failureSnackbar.show();
+                    }
+                }
+            });
         }
     }
 

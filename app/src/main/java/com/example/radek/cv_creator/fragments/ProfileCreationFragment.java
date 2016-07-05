@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -52,6 +53,8 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
     TextInputLayout addressLine3;
     TextInputLayout dateOfBirth;
 
+    ImageButton calendarButton;
+
     private static final String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
     private static final String NAME_PATTERN = "^[A-Z][a-zA-Z]*( )*$";
     private static final String DOB_PATTERN = "^\\d{4}[-/\\s]?((((0[13578])|(1[02]))[-/\\s]?(([0-2][0-9])|(3[01])))|(((0[469])|(11))[-/\\s]?(([0-2][0-9])|(30)))|(02[-/\\s]?[0-2][0-9]))$";
@@ -86,7 +89,16 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
         super.onActivityCreated(savedInstanceState);
 
         newProfile = new Profile();
-        dateOfBirthTIL = (EditText) getView().findViewById(R.id.textDialog3);
+        calendarButton = (ImageButton)getView().findViewById(R.id.DOBDialogButton) ;
+
+        calendarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogFragment newFragment = new SelectDateFragment();
+                newFragment.setTargetFragment(ProfileCreationFragment.this, 1);
+                newFragment.show(activity.getSupportFragmentManager(), "DatePicker");
+            }
+        });
 
         firstName = (TextInputLayout)getView().findViewById(R.id.til);
         lastName = (TextInputLayout)getView().findViewById(R.id.til2);
@@ -108,15 +120,6 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
         addressLine1 = (TextInputLayout)getView().findViewById(R.id.til6);
         addressLine2 = (TextInputLayout)getView().findViewById(R.id.til7);
         addressLine3 = (TextInputLayout)getView().findViewById(R.id.til8);
-
-        dateOfBirthTIL.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DialogFragment newFragment = new SelectDateFragment();
-                newFragment.setTargetFragment(ProfileCreationFragment.this, 1);
-                newFragment.show(activity.getSupportFragmentManager(), "DatePicker");
-            }
-        });
 
         photoImageView = (ImageView)getView().findViewById(R.id.profilePhotoImageView);
         photoImageView.setOnClickListener(new View.OnClickListener(){
@@ -214,7 +217,7 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
 
     @Override
     public void onFinishEditDatePickerDialog(String dateText) {
-        dateOfBirthTIL.setText(dateText);
+        dateOfBirth.getEditText().setText(dateText);
     }
 
     public interface OnProfileCreateFragmentClickListener
