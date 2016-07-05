@@ -90,6 +90,20 @@ public class ProfileListViewAdapter extends BaseExpandableListAdapter{
     @Override
     public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
         View childView = inflater.inflate(R.layout.manage_profiles_child, null);
+        TextView email = (TextView)childView.findViewById(R.id.childMailTextView);
+        TextView dob = (TextView)childView.findViewById(R.id.childDOBTextView);
+        TextView phone = (TextView)childView.findViewById(R.id.childPhoneTextView);
+        TextView addr1 = (TextView)childView.findViewById(R.id.childAddr1TextView);
+        TextView addr2 = (TextView)childView.findViewById(R.id.childAddr2TextView);
+        TextView addr3 = (TextView)childView.findViewById(R.id.childAddr3TextView);
+
+        email.setText(profilesResource.get(i).getEmail());
+        dob.setText(profilesResource.get(i).getDOB());
+        phone.setText(profilesResource.get(i).getPhoneNumber());
+        addr1.setText(profilesResource.get(i).getAddressLine1());
+        addr2.setText(profilesResource.get(i).getAddressLine2());
+        addr3.setText(profilesResource.get(i).getAddressLine3());
+
         return childView;
     }
 

@@ -72,18 +72,6 @@ public class ProfileManagementFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        //add fragment listeners here
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View fragmentView = inflater.inflate(R.layout.fragment_manage_profiles, container, false);
-        profilesResource = (ArrayList<Profile>) args.get("profilesResource");
-        expandableListView = (ExpandableListView) fragmentView.findViewById(R.id.profilesExpandableListView);
-        expandableListView.setAdapter(new ProfileListViewAdapter(activity, profilesResource));
-        expandableListView.setIndicatorBounds(850,950);
-
         expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
             public void onGroupExpand(int groupPosition) {
@@ -110,6 +98,17 @@ public class ProfileManagementFragment extends Fragment {
 
             }
         });
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View fragmentView = inflater.inflate(R.layout.fragment_manage_profiles, container, false);
+        profilesResource = (ArrayList<Profile>) args.get("profilesResource");
+        expandableListView = (ExpandableListView) fragmentView.findViewById(R.id.profilesExpandableListView);
+        expandableListView.setAdapter(new ProfileListViewAdapter(activity, profilesResource));
+        expandableListView.setIndicatorBounds(850,950);
 
         return fragmentView;
     }
