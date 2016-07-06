@@ -13,6 +13,9 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -24,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.radek.cv_creator.DbBitmapUtility;
 import com.example.radek.cv_creator.Profile;
 import com.example.radek.cv_creator.ProfileListViewAdapter;
 import com.example.radek.cv_creator.R;
@@ -41,6 +45,9 @@ public class ProfileManagementFragment extends Fragment {
     static Bundle args;
     private ExpandableListView expandableListView;
 
+    private MenuItem editProfile;
+    private MenuItem deleteProfile;
+
     private int lastExpandedPosition = -1;
     private int expandedCount;
 
@@ -52,6 +59,7 @@ public class ProfileManagementFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         args = getArguments();
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -66,6 +74,18 @@ public class ProfileManagementFragment extends Fragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement ");
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View fragmentView = inflater.inflate(R.layout.fragment_manage_profiles, container, false);
+        profilesResource = (ArrayList<Profile>) args.get("profilesResource");
+        expandableListView = (ExpandableListView) fragmentView.findViewById(R.id.profilesExpandableListView);
+        expandableListView.setAdapter(new ProfileListViewAdapter(activity, profilesResource));
+        expandableListView.setIndicatorBounds(850,950);
+
+        return fragmentView;
     }
 
     @Override
@@ -85,6 +105,7 @@ public class ProfileManagementFragment extends Fragment {
 
                 Snackbar asd = Snackbar.make(getView(),"Turn on the editing menu",Snackbar.LENGTH_SHORT);
                 asd.show();
+                toggleActionBarMenuVisibility();
             }
         });
 
@@ -94,23 +115,41 @@ public class ProfileManagementFragment extends Fragment {
                 expandedCount--;
                 if(expandedCount==0){
                     Toast.makeText(getContext(), "Turn off the editing menu", Toast.LENGTH_SHORT).show();
+                    toggleActionBarMenuVisibility();
                 }
-
             }
         });
-
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View fragmentView = inflater.inflate(R.layout.fragment_manage_profiles, container, false);
-        profilesResource = (ArrayList<Profile>) args.get("profilesResource");
-        expandableListView = (ExpandableListView) fragmentView.findViewById(R.id.profilesExpandableListView);
-        expandableListView.setAdapter(new ProfileListViewAdapter(activity, profilesResource));
-        expandableListView.setIndicatorBounds(850,950);
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.profile_creation_ab_menu, menu);
 
-        return fragmentView;
+        editProfile = (MenuItem)menu.findItem(R.id.editProfile); // 0 is settings from MainActivity
+        editProfile.setIcon(DbBitmapUtility.resizeImage(
+                getContext(),
+                R.drawable.ic_mode_edit_white_24dp,DbBitmapUtility.dpToPx(getContext(),64),DbBitmapUtility.dpToPx(getContext(),64)));
+        Log.d("MENU ITEM = ","" + editProfile);
+        deleteProfile = (MenuItem)menu.findItem(R.id.deleteProfile);
+        deleteProfile.setIcon(DbBitmapUtility.resizeImage(
+                getContext(),
+                R.drawable.ic_delete_white_24dp,DbBitmapUtility.dpToPx(getContext(),64),DbBitmapUtility.dpToPx(getContext(),64)));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.editProfile){
+            Snackbar.make(getActivity().getCurrentFocus(),"EDIT PROFILE",Snackbar.LENGTH_SHORT).show();
+            profileManagementEventListener.onEditProfilePressed(lastExpandedPosition);
+        }else if(id == R.id.deleteProfile){
+            Snackbar.make(getActivity().getCurrentFocus(),"DELETE PROFILE",Snackbar.LENGTH_SHORT).show();
+            profileManagementEventListener.onDeleteProfilePressed(lastExpandedPosition);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -121,7 +160,8 @@ public class ProfileManagementFragment extends Fragment {
 
     public interface ProfileManagementEventListener
     {
-        void onSumfin();
+        void onEditProfilePressed(int userProfilePosition);
+        void onDeleteProfilePressed(int userProfilePosition);
     }
 
     private int GetDipsFromPixel(float pixels)
@@ -130,5 +170,10 @@ public class ProfileManagementFragment extends Fragment {
         final float scale = getResources().getDisplayMetrics().density;
         // Convert the dps to pixels, based on density scale
         return (int) (pixels * scale + 0.5f);
+    }
+
+    private void toggleActionBarMenuVisibility(){
+        editProfile.setVisible(!editProfile.isVisible());
+        deleteProfile.setVisible(!deleteProfile.isVisible());
     }
 }

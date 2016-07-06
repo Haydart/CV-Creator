@@ -1,7 +1,6 @@
 package com.example.radek.cv_creator.fragments;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -21,31 +20,32 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.example.radek.cv_creator.Profile;
 import com.example.radek.cv_creator.R;
 
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by Radek on 2016-06-30.
+ * Created by Radek on 2016-07-06.
  */
-public class ProfileCreationFragment extends Fragment implements SelectDateFragment.EditDatePickerListener{
+public class ProfileEditFragment extends Fragment implements SelectDateFragment.EditDatePickerListener{
 
     FragmentActivity activity;
     ImageView photoImageView;
     Bitmap photoBitmap;
 
-    EditText dateOfBirthTIL;
-    Profile newProfile;
+    Profile editedProfile;
 
     TextInputLayout firstName;
     TextInputLayout lastName;
     RadioGroup genderRadioGroup;
     RadioButton checkedGender;
+    RadioButton gender1;
+    RadioButton gender2;
+    RadioButton gender3;
     TextInputLayout emailAddress;
     TextInputLayout phoneNumber;
     TextInputLayout addressLine1;
@@ -54,6 +54,7 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
     TextInputLayout dateOfBirth;
 
     ImageButton calendarButton;
+    static Bundle args;
 
     private static final String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
     private static final String NAME_PATTERN = "^[A-Z][a-zA-Z]*( )*$";
@@ -67,35 +68,34 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
 
     boolean photoAdded = false;
 
-    public ProfileCreationFragment() {
+    public ProfileEditFragment() {
         // Required empty public constructor
     }
 
-    public Profile getNewProfile() {
-        return new Profile( firstName.getEditText().getText().toString().trim() + " " + lastName.getEditText().getText().toString().trim(),
-                            checkedGender.getText().toString(),
-                            emailAddress.getEditText().getText().toString(),
-                            phoneNumber.getEditText().getText().toString(),
-                            addressLine1.getEditText().getText().toString(),
-                            addressLine2.getEditText().getText().toString(),
-                            addressLine3.getEditText().getText().toString(),
-                            photoBitmap,
-                            dateOfBirth.getEditText().getText().toString()
-                            );
+    public Profile getEditedProfile() {
+        return new Profile( firstName.getEditText().getText().toString() + " " + lastName.getEditText().getText().toString(),
+                checkedGender.getText().toString(),
+                emailAddress.getEditText().getText().toString(),
+                phoneNumber.getEditText().getText().toString(),
+                addressLine1.getEditText().getText().toString(),
+                addressLine2.getEditText().getText().toString(),
+                addressLine3.getEditText().getText().toString(),
+                photoBitmap,
+                dateOfBirth.getEditText().getText().toString()
+        );
     }
 
     @Override
     public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        newProfile = new Profile();
         calendarButton = (ImageButton)getView().findViewById(R.id.DOBDialogButton) ;
 
         calendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 DialogFragment newFragment = new SelectDateFragment();
-                newFragment.setTargetFragment(ProfileCreationFragment.this, 1);
+                newFragment.setTargetFragment(ProfileEditFragment.this, 1);
                 newFragment.show(activity.getSupportFragmentManager(), "DatePicker");
             }
         });
@@ -112,7 +112,9 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
         });
 
         checkedGender = (RadioButton)getView().findViewById(R.id.genderRadioButton1);
-        checkedGender.setChecked(true);
+        gender1 = (RadioButton)getView().findViewById(R.id.genderRadioButton1);
+        gender2 = (RadioButton)getView().findViewById(R.id.genderRadioButton2);
+        gender3 = (RadioButton)getView().findViewById(R.id.genderRadioButton3);
 
         dateOfBirth = (TextInputLayout)getView().findViewById(R.id.til3);
         emailAddress = (TextInputLayout)getView().findViewById(R.id.til4);
@@ -120,8 +122,10 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
         addressLine1 = (TextInputLayout)getView().findViewById(R.id.til6);
         addressLine2 = (TextInputLayout)getView().findViewById(R.id.til7);
         addressLine3 = (TextInputLayout)getView().findViewById(R.id.til8);
-
         photoImageView = (ImageView)getView().findViewById(R.id.profilePhotoImageView);
+
+        setProfileValues();
+
         photoImageView.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -146,8 +150,15 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        args = getArguments();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        editedProfile = (Profile) args.get("editedProfile");
         return inflater.inflate(R.layout.fragment_profile_creation, container, false);
     }
 
@@ -220,7 +231,31 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
         dateOfBirth.getEditText().setText(dateText);
     }
 
-    public interface OnProfileCreateFragmentClickListener
+    private void setProfileValues(){
+        String[] name = editedProfile.getName().split(" ");
+        firstName.getEditText().setText(name[0]);
+        lastName.getEditText().setText(name[1]);
+
+        if(editedProfile.getGender().equals("Male")){
+            gender1.setChecked(true);
+        }else if(editedProfile.getGender().equals("Female")){
+            gender2.setChecked(true);
+        }else{
+            gender3.setChecked(true);
+        }
+
+        emailAddress.getEditText().setText(editedProfile.getEmail());
+        dateOfBirth.getEditText().setText(editedProfile.getDOB());
+        phoneNumber.getEditText().setText(editedProfile.getPhoneNumber());
+        addressLine1.getEditText().setText(editedProfile.getAddressLine1());
+        addressLine2.getEditText().setText(editedProfile.getAddressLine2());
+        addressLine3.getEditText().setText(editedProfile.getAddressLine3());
+
+        if(editedProfile.getPhoto()!=null)
+            photoImageView.setImageBitmap(editedProfile.getPhoto());
+    }
+
+    public interface OnProfileEditFragmentClickListener
     {
         void onCreateProfileFragmentInteraction(View view);
     }

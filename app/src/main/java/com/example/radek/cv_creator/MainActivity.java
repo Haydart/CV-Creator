@@ -1,6 +1,5 @@
 package com.example.radek.cv_creator;
 
-import android.app.FragmentManager;
 import android.content.Context;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
@@ -24,6 +23,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.radek.cv_creator.fragments.CVCreationFragment;
@@ -31,7 +32,9 @@ import com.example.radek.cv_creator.fragments.CVManagementFragment;
 import com.example.radek.cv_creator.fragments.HomeFragment;
 import com.example.radek.cv_creator.fragments.NoProfilesFragment;
 import com.example.radek.cv_creator.fragments.ProfileCreationFragment;
+import com.example.radek.cv_creator.fragments.ProfileEditFragment;
 import com.example.radek.cv_creator.fragments.ProfileManagementFragment;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,18 +58,24 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     ArrayList<Profile> userProfiles;
+    int activeProfileIndex;
+    ImageView navDrawerAddProfileImageView;
     ContentStorageManager contentStorageManager;
 
     NoProfilesFragment noProfilesFragment;
     CVCreationFragment cvCreationFragment;
     CVManagementFragment cvManagementFragment;
     ProfileCreationFragment profileCreationFragment;
+    ProfileEditFragment profileEditFragment;
     ProfileManagementFragment profileManagementFragment;
     HomeFragment homeFragment;
     FragmentTransaction fragmentTransaction;
 
+    public static final int ADD_TO_BACKSTACK = 1;
+    public static final int DONT_ADD_TO_BACKSTACK = 0;
+
     int currentFragmentId;
-    int previousFragmentId;
+    boolean hasCurrentProfileChanged = true; // we have to set the initial profile
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +84,10 @@ public class MainActivity extends AppCompatActivity implements
         instance = this;
         getReferences();
 
+        //contentStorageManager.deleteAllProfileRecords();
         userProfiles = contentStorageManager.getProfilesFromDatabase();
+        activeProfileIndex = 0;
+
         if(userProfiles.size()==0 | userProfiles==null){
 
             Snackbar noProfilesSnackbar = Snackbar.make(navigationView,"You have no created profiles",Snackbar.LENGTH_LONG);
@@ -96,11 +108,27 @@ public class MainActivity extends AppCompatActivity implements
         fab.setVisibility(View.GONE);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                super.onDrawerStateChanged(newState);
+                if(userProfiles.size()>0 & userProfiles!=null)
+                    setNavViewProfile();
+            }
+        };
         drawer.setDrawerListener(toggle);
+
         toggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
+
+        navDrawerAddProfileImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onNavigationItemSelected(new ActionMenuItem(getApplicationContext(),0,R.id.nav_profie_create,0,0,""));
+            }
+        });
 
         fragmentTransaction.replace(R.id.fragmentsRelativeLayout,homeFragment);
         fragmentTransaction.addToBackStack(String.valueOf(homeFragment.getId()));
@@ -113,8 +141,10 @@ public class MainActivity extends AppCompatActivity implements
         fab = (FloatingActionButton) findViewById(R.id.fab);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-        userProfiles = new ArrayList<>();
+        View header = navigationView.getHeaderView(0);
+        navDrawerAddProfileImageView = (ImageView)header.findViewById(R.id.navDrawerAddNewProfile);
 
+        userProfiles = new ArrayList<>();
         contentStorageManager = ContentStorageManager.getInstance();
 
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -122,6 +152,7 @@ public class MainActivity extends AppCompatActivity implements
         cvCreationFragment = new CVCreationFragment();
         cvManagementFragment = new CVManagementFragment();
         profileCreationFragment = new ProfileCreationFragment();
+        profileEditFragment = new ProfileEditFragment();
         profileManagementFragment = new ProfileManagementFragment();
         homeFragment = new HomeFragment();
     }
@@ -158,6 +189,7 @@ public class MainActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
+            Snackbar.make(getCurrentFocus(),"NIY :>",Snackbar.LENGTH_SHORT).show();
             return true;
         }
 
@@ -175,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements
             bundle.putParcelableArrayList("profilesResource",userProfiles);
             fragment.setArguments(bundle);
             homeFragment = (HomeFragment)fragment;
-            displayFragment(homeFragment);
+            displayFragment(homeFragment, ADD_TO_BACKSTACK);
 
         } else if (id == R.id.nav_cv_manage) {
             Bundle bundle = new Bundle();
@@ -183,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements
             //bundle.putParcelableArrayList("profilesResource",userProfiles);
             fragment.setArguments(bundle);
             cvManagementFragment = (CVManagementFragment)fragment;
-            displayFragment(cvManagementFragment);
+            displayFragment(cvManagementFragment, ADD_TO_BACKSTACK);
 
         } else if (id == R.id.nav_cv_create) {
             Bundle bundle = new Bundle();
@@ -191,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements
             bundle.putParcelableArrayList("profilesResource",userProfiles);
             fragment.setArguments(bundle);
             cvCreationFragment = (CVCreationFragment)fragment;
-            displayFragment(cvCreationFragment);
+            displayFragment(cvCreationFragment, ADD_TO_BACKSTACK);
 
         } else if (id == R.id.nav_manage_profiles) {
             Fragment fragment = new ProfileManagementFragment();
@@ -199,15 +231,15 @@ public class MainActivity extends AppCompatActivity implements
             bundle.putParcelableArrayList("profilesResource",userProfiles);
             fragment.setArguments(bundle);
             profileManagementFragment = (ProfileManagementFragment)fragment;
-            displayFragment(profileManagementFragment);
+            displayFragment(profileManagementFragment, ADD_TO_BACKSTACK);
 
         } else if (id == R.id.nav_profie_create) {
             final Fragment fragment = new ProfileCreationFragment();
             Bundle bundle = new Bundle();
-            bundle.putParcelableArrayList("profilesResource", userProfiles);
+            //bundle.putParcelableArrayList("profilesResource", userProfiles);
             fragment.setArguments(bundle);
             profileCreationFragment = (ProfileCreationFragment) fragment;
-            displayFragment(profileCreationFragment);
+            displayFragment(profileCreationFragment, ADD_TO_BACKSTACK);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -238,15 +270,17 @@ public class MainActivity extends AppCompatActivity implements
         fragmentTransaction.commit();
     }
 
-    private void displayFragment(Fragment fragment){
+    private void displayFragment(Fragment fragment, int backStackMode){
         handleFabAndActionBarTitle(fragment);
-        getSupportFragmentManager()
-                .beginTransaction()
-//                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
-                .add(R.id.fragmentsRelativeLayout, fragment)
-                .replace(R.id.fragmentsRelativeLayout,fragment)
-                .addToBackStack(null)
-                .commit();
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.fragmentsRelativeLayout, fragment);
+        transaction.replace(R.id.fragmentsRelativeLayout,fragment);
+
+        if(backStackMode == ADD_TO_BACKSTACK)
+            transaction.addToBackStack(null);
+
+        transaction.commit();
     }
 
     private ArrayList<Profile> getMockProfilesArrayList(){
@@ -273,6 +307,16 @@ public class MainActivity extends AppCompatActivity implements
         if (view != null) {
             ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).
                     hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
+
+    private void setNavViewProfile(){
+        if(hasCurrentProfileChanged){
+            ((CircularImageView)findViewById(R.id.navDrawerCircularImageView)).setImageBitmap(userProfiles.get(activeProfileIndex).getPhoto());
+            ((CircularImageView)findViewById(R.id.navDrawerCircularImageView)).setBorderColor(Color.WHITE);
+            ((TextView)findViewById(R.id.navDrawerProfileNameTextView)).setText(userProfiles.get(activeProfileIndex).getName());
+            ((TextView)findViewById(R.id.navDrawerProfileMailTextView)).setText(userProfiles.get(activeProfileIndex).getEmail());
+            hasCurrentProfileChanged = false;
         }
     }
 
@@ -321,6 +365,28 @@ public class MainActivity extends AppCompatActivity implements
                 }
             });
 
+        }else if(currentFragment instanceof ProfileEditFragment){
+            getSupportActionBar().setTitle("Edit profile");
+            fab.setVisibility(View.VISIBLE);
+            fab.setImageBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(),
+                    R.drawable.ic_check_white_24dp));
+
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((ProfileEditFragment) currentFragment).setErrorsDisabled();
+                    hideKeyboard();
+                    if (((ProfileEditFragment) currentFragment).isProfileDataValid()) {
+                        Snackbar successSnackbar = Snackbar.make(getCurrentFocus(), "Successfully edited the profile", Snackbar.LENGTH_SHORT);
+                        successSnackbar.show();
+
+                    } else {
+                        Snackbar failureSnackbar = Snackbar.make(getCurrentFocus(), "Information is either incomplete or faulty", Snackbar.LENGTH_SHORT);
+                        failureSnackbar.show();
+                    }
+                }
+            });
+
         }else if(currentFragment instanceof ProfileCreationFragment){
             getSupportActionBar().setTitle("Create new profile");
             fab.setVisibility(View.VISIBLE);
@@ -352,9 +418,6 @@ public class MainActivity extends AppCompatActivity implements
                         }
 
                         fab.setVisibility(View.GONE);
-                        Log.d("USER PROFILES SIZE", " " + userProfiles.size());
-
-                        Toast.makeText(getApplicationContext(), "Profiles reloaded", Toast.LENGTH_SHORT).show();
                         onBackPressed();
                     } else {
                         Snackbar failureSnackbar = Snackbar.make(getCurrentFocus(), "Information is either incomplete or faulty", Snackbar.LENGTH_SHORT);
@@ -373,11 +436,6 @@ public class MainActivity extends AppCompatActivity implements
         contentStorageManager.saveProfilesList(profiles);
     }
 
-    private void reloadUserProfiles(){
-        saveProfiles(userProfiles);
-        loadProfiles();
-    }
-
     @Override
     public void onSumfin() { // home fragment
 
@@ -391,5 +449,23 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onCreateProfileFragmentInteraction(View view) {
 
+    }
+
+    @Override
+    public void onEditProfilePressed(int userProfilePosition) { //profile management fragment
+        Toast.makeText(getApplicationContext(), "editing profile: " + userProfilePosition, Toast.LENGTH_SHORT).show();
+
+        final Fragment fragment = new ProfileEditFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("editedProfile", userProfiles.get(userProfilePosition));
+        fragment.setArguments(bundle);
+        profileEditFragment = (ProfileEditFragment) fragment;
+        displayFragment(profileEditFragment, ADD_TO_BACKSTACK);
+        handleFabAndActionBarTitle(profileEditFragment);
+    }
+
+    @Override
+    public void onDeleteProfilePressed(int userProfilePosition) {//profile management fragment
+        Toast.makeText(getApplicationContext(), "deleting profile: " + userProfilePosition, Toast.LENGTH_SHORT).show();
     }
 }
