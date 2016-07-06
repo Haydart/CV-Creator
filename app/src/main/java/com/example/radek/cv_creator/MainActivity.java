@@ -58,7 +58,9 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     ArrayList<Profile> userProfiles;
-    int activeProfileIndex;
+    int activeProfileIndex = -1;
+    int lastEditedProfileIndex = -1;
+
     ImageView navDrawerAddProfileImageView;
     ContentStorageManager contentStorageManager;
 
@@ -380,6 +382,12 @@ public class MainActivity extends AppCompatActivity implements
                         Snackbar successSnackbar = Snackbar.make(getCurrentFocus(), "Successfully edited the profile", Snackbar.LENGTH_SHORT);
                         successSnackbar.show();
 
+                        Profile newlyEditedProfile;
+                        newlyEditedProfile = profileEditFragment.getEditedProfile();
+                        userProfiles.set(lastEditedProfileIndex,newlyEditedProfile);
+                        onBackPressed();
+                        hasCurrentProfileChanged = true;
+
                     } else {
                         Snackbar failureSnackbar = Snackbar.make(getCurrentFocus(), "Information is either incomplete or faulty", Snackbar.LENGTH_SHORT);
                         failureSnackbar.show();
@@ -454,6 +462,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onEditProfilePressed(int userProfilePosition) { //profile management fragment
         Toast.makeText(getApplicationContext(), "editing profile: " + userProfilePosition, Toast.LENGTH_SHORT).show();
+        lastEditedProfileIndex = userProfilePosition;
 
         final Fragment fragment = new ProfileEditFragment();
         Bundle bundle = new Bundle();

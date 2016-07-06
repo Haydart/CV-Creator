@@ -169,7 +169,7 @@ public class ProfileEditFragment extends Fragment implements SelectDateFragment.
         if(requestCode == PHOTO_REQUEST_CODE){
             if(resultCode == Activity.RESULT_OK){
                 Bundle bundle = data.getExtras();
-                photoBitmap = Bitmap.createScaledBitmap((Bitmap)bundle.get("data"),300,400,false);
+                photoBitmap = Bitmap.createScaledBitmap((Bitmap)bundle.get("data"),600,800,false);
                 photoImageView.setImageBitmap(photoBitmap);
                 photoAdded = true;
             }
@@ -251,12 +251,15 @@ public class ProfileEditFragment extends Fragment implements SelectDateFragment.
         addressLine2.getEditText().setText(editedProfile.getAddressLine2());
         addressLine3.getEditText().setText(editedProfile.getAddressLine3());
 
-        if(editedProfile.getPhoto()!=null)
+        if(editedProfile.getPhoto()!=null){
             photoImageView.setImageBitmap(editedProfile.getPhoto());
+            photoBitmap = editedProfile.getPhoto();
+        }
+
     }
 
     public interface OnProfileEditFragmentClickListener
     {
-        void onCreateProfileFragmentInteraction(View view);
+        void onSuccessfullyEditedProfile(View view);
     }
 }
