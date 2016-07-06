@@ -477,7 +477,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onEditProfilePressed(int userProfilePosition) { //profile management fragment
-        Toast.makeText(getApplicationContext(), "editing profile: " + userProfilePosition, Toast.LENGTH_SHORT).show();
         lastEditedProfileIndex = userProfilePosition;
 
         final Fragment fragment = new ProfileEditFragment();
@@ -491,8 +490,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onDeleteProfilePressed(final int userProfilePosition) {//profile management fragment
-        Toast.makeText(getApplicationContext(), "deleting profile: " + userProfilePosition, Toast.LENGTH_SHORT).show();
-
         AlertDialog profileDeletionDialogBox = new AlertDialog.Builder(MainActivity.this)
                 //set message, title, and icon
                 .setTitle("Delete profile")

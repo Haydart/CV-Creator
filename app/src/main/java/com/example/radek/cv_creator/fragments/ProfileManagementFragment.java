@@ -50,7 +50,6 @@ public class ProfileManagementFragment extends Fragment {
     private MenuItem deleteProfile;
 
     private int lastExpandedPosition = -1;
-    private int expandedCount;
 
     public ProfileManagementFragment() {
         // Required empty public constructor
@@ -99,28 +98,19 @@ public class ProfileManagementFragment extends Fragment {
         expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
             public void onGroupExpand(int groupPosition) {
-                expandedCount++;
-
                 if (lastExpandedPosition != -1
                         && groupPosition != lastExpandedPosition) {
                     expandableListView.collapseGroup(lastExpandedPosition);
                 }
                 lastExpandedPosition = groupPosition;
-
-                Snackbar asd = Snackbar.make(getView(),"Turn on the editing menu",Snackbar.LENGTH_SHORT);
-                asd.show();
-                toggleActionBarMenuVisibility();
+                setActionBarMenuVisibility(true);
             }
         });
 
         expandableListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
             @Override
             public void onGroupCollapse(int groupPosition) {
-                expandedCount--;
-                if(expandedCount==0){
-                    Toast.makeText(getContext(), "Turn off the editing menu", Toast.LENGTH_SHORT).show();
-                    toggleActionBarMenuVisibility();
-                }
+                setActionBarMenuVisibility(false);
             }
         });
     }
@@ -168,17 +158,9 @@ public class ProfileManagementFragment extends Fragment {
         void onDeleteProfilePressed(int userProfilePosition);
     }
 
-    private int GetDipsFromPixel(float pixels)
-    {
-        // Get the screen's density scale
-        final float scale = getResources().getDisplayMetrics().density;
-        // Convert the dps to pixels, based on density scale
-        return (int) (pixels * scale + 0.5f);
-    }
-
-    private void toggleActionBarMenuVisibility(){
-        editProfile.setVisible(!editProfile.isVisible());
-        deleteProfile.setVisible(!deleteProfile.isVisible());
+    private void setActionBarMenuVisibility(boolean value){
+        editProfile.setVisible(value);
+        deleteProfile.setVisible(value);
     }
 
     public void notifyProfilesResourceChanged(ArrayList<Profile> newProfilesResource){

@@ -56,12 +56,9 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
     ImageButton calendarButton;
 
     private static final String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
-    private static final String NAME_PATTERN = "^[A-Z][a-zA-Z]*( )*$";
     private static final String DOB_PATTERN = "^\\d{4}[-/\\s]?((((0[13578])|(1[02]))[-/\\s]?(([0-2][0-9])|(3[01])))|(((0[469])|(11))[-/\\s]?(([0-2][0-9])|(30)))|(02[-/\\s]?[0-2][0-9]))$";
     private Pattern emailPattern = Pattern.compile(EMAIL_PATTERN);
-    private Pattern namePattern = Pattern.compile(NAME_PATTERN);
     private Pattern dobPattern = Pattern.compile(DOB_PATTERN);
-    private Matcher matcher;
 
     static final int PHOTO_REQUEST_CODE = 1;
 
@@ -176,22 +173,10 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
     private int setInvalidDataErrors(){
         int errorCount = 0;
 
-        if(!namePattern.matcher(firstName.getEditText().getText().toString()).matches()){
-            errorCount++;
-            firstName.setErrorEnabled(true);
-            firstName.setError("Invalid first name");
-        }
-
-        if(!namePattern.matcher(lastName.getEditText().getText().toString()).matches()){
-            errorCount++;
-            lastName.setErrorEnabled(true);
-            lastName.setError("Invalid last name");
-        }
-
         if(!dobPattern.matcher(dateOfBirth.getEditText().getText().toString()).matches()){
             errorCount++;
             dateOfBirth.setErrorEnabled(true);
-            dateOfBirth.setError("Invalid date of birth");
+            dateOfBirth.setError("Date not in yyyy-mm-dd format");
         }
 
         if(!emailPattern.matcher(emailAddress.getEditText().getText().toString()).matches()){
