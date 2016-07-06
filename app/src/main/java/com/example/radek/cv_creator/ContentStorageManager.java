@@ -76,8 +76,7 @@ public class ContentStorageManager
         return alarmsList;
     }
 
-    public void addProfileToDatabase(Profile profile) throws SQLiteException {
-        database = dbHelper.getWritableDatabase();
+    public ContentValues getContentValuesForProfile(Profile profile){
         ContentValues cv = new ContentValues();
         cv.put(DatabaseConstants.COLUMN_NAME, profile.getName());
         cv.put(DatabaseConstants.COLUMN_GENDER, profile.getGender());
@@ -91,14 +90,37 @@ public class ContentStorageManager
         if(profile.getPhoto()!=null)
             cv.put(DatabaseConstants.COLUMN_PHOTO , DbBitmapUtility.getBytes(profile.getPhoto()));
 
-        database.insert(DatabaseConstants.PROFILE_TABLE, null, cv );
+        return cv;
+    }
+
+    public void addProfileToDatabase(Profile profile) throws SQLiteException {
+        database = dbHelper.getWritableDatabase();
+
+        database.insert(DatabaseConstants.PROFILE_TABLE, null, getContentValuesForProfile(profile));
         database.close();
     }
 
     public void deleteAllProfileRecords(){
         database = dbHelper.getWritableDatabase();
         database.delete(DatabaseConstants.PROFILE_TABLE,null,null);
+        database.close();
     }
+
+    public void updateProfile(Profile profile){ //we distinguish them by ID held in the database
+        database = dbHelper.getWritableDatabase();
+        database.update(DatabaseConstants.PROFILE_TABLE, getContentValuesForProfile(profile), DatabaseConstants.COLUMN_ID +"="+profile.getID(), null);
+        database.close();
+    }
+
+    public void deleteProfile(int databaseProfileID){ //sql injection-proof
+        database = dbHelper.getWritableDatabase();
+
+        String whereClause = DatabaseConstants.COLUMN_ID + "=?";
+        String[] whereArgs = new String[] { String.valueOf(databaseProfileID) };
+        database.delete(DatabaseConstants.PROFILE_TABLE, whereClause, whereArgs);
+        database.close();
+    }
+
 
     public ArrayList getProfilesFromDatabase(){
         ArrayList<Profile> profiles = new ArrayList<>();

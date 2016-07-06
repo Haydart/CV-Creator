@@ -1,6 +1,8 @@
 package com.example.radek.cv_creator;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -385,6 +387,20 @@ public class MainActivity extends AppCompatActivity implements
                         Profile newlyEditedProfile;
                         newlyEditedProfile = profileEditFragment.getEditedProfile();
                         userProfiles.set(lastEditedProfileIndex,newlyEditedProfile);
+
+                        try {
+                            contentStorageManager.updateProfile(newlyEditedProfile);
+                        } catch (SQLiteException ex) {
+                            Snackbar sqlFailSnackBar = Snackbar.make(getCurrentFocus(), "Failed updating the database, sorry :/", Snackbar.LENGTH_SHORT);
+                            sqlFailSnackBar.setAction("REPORT BUG", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+
+                                }
+                            });
+                            sqlFailSnackBar.show();
+                        }
+
                         onBackPressed();
                         hasCurrentProfileChanged = true;
 
@@ -474,7 +490,31 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onDeleteProfilePressed(int userProfilePosition) {//profile management fragment
+    public void onDeleteProfilePressed(final int userProfilePosition) {//profile management fragment
         Toast.makeText(getApplicationContext(), "deleting profile: " + userProfilePosition, Toast.LENGTH_SHORT).show();
+
+        AlertDialog profileDeletionDialogBox = new AlertDialog.Builder(MainActivity.this)
+                //set message, title, and icon
+                .setTitle("Delete profile")
+                .setMessage("Are you sure you want to delete profile for " + userProfiles.get(userProfilePosition).getName() + "?")
+
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+
+                        contentStorageManager.deleteProfile(userProfiles.get(userProfilePosition).getID());
+                        userProfiles.remove(userProfilePosition);
+                        profileManagementFragment.notifyProfilesResourceChanged(userProfiles);
+                        dialog.dismiss();
+                    }
+                })
+
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+
+        profileDeletionDialogBox.show();
     }
 }

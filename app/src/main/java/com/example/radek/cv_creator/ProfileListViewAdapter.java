@@ -12,7 +12,9 @@ import android.widget.TextView;
 
 import com.mikhaellopez.circularimageview.CircularImageView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Radek on 2016-07-05.
@@ -111,4 +113,6 @@ public class ProfileListViewAdapter extends BaseExpandableListAdapter{
     public boolean isChildSelectable(int i, int i1) {
         return true;
     }
+
+    public void setProfiles(ArrayList<Profile> profiles) {profilesResource = profiles;}
 }

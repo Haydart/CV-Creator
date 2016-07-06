@@ -73,7 +73,9 @@ public class ProfileEditFragment extends Fragment implements SelectDateFragment.
     }
 
     public Profile getEditedProfile() {
-        return new Profile( firstName.getEditText().getText().toString() + " " + lastName.getEditText().getText().toString(),
+        return new Profile(
+                editedProfile.getID(),
+                firstName.getEditText().getText().toString() + " " + lastName.getEditText().getText().toString(),
                 checkedGender.getText().toString(),
                 emailAddress.getEditText().getText().toString(),
                 phoneNumber.getEditText().getText().toString(),

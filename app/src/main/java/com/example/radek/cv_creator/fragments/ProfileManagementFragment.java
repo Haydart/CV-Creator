@@ -44,6 +44,7 @@ public class ProfileManagementFragment extends Fragment {
     private ArrayList<Profile> profilesResource;
     static Bundle args;
     private ExpandableListView expandableListView;
+    ProfileListViewAdapter profileListViewAdapter;
 
     private MenuItem editProfile;
     private MenuItem deleteProfile;
@@ -82,7 +83,10 @@ public class ProfileManagementFragment extends Fragment {
         View fragmentView = inflater.inflate(R.layout.fragment_manage_profiles, container, false);
         profilesResource = (ArrayList<Profile>) args.get("profilesResource");
         expandableListView = (ExpandableListView) fragmentView.findViewById(R.id.profilesExpandableListView);
-        expandableListView.setAdapter(new ProfileListViewAdapter(activity, profilesResource));
+        profileListViewAdapter = new ProfileListViewAdapter(activity, profilesResource);
+        expandableListView.setAdapter(profileListViewAdapter);
+
+        //TODO make it independent on screen size
         expandableListView.setIndicatorBounds(850,950);
 
         return fragmentView;
@@ -175,5 +179,10 @@ public class ProfileManagementFragment extends Fragment {
     private void toggleActionBarMenuVisibility(){
         editProfile.setVisible(!editProfile.isVisible());
         deleteProfile.setVisible(!deleteProfile.isVisible());
+    }
+
+    public void notifyProfilesResourceChanged(ArrayList<Profile> newProfilesResource){
+        profileListViewAdapter.setProfiles(newProfilesResource);
+        profileListViewAdapter.notifyDataSetChanged();
     }
 }
