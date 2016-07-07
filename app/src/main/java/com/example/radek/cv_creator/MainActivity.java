@@ -10,7 +10,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.view.menu.ActionMenuItem;
@@ -36,6 +35,7 @@ import com.example.radek.cv_creator.fragments.NoProfilesFragment;
 import com.example.radek.cv_creator.fragments.ProfileCreationFragment;
 import com.example.radek.cv_creator.fragments.ProfileEditFragment;
 import com.example.radek.cv_creator.fragments.ProfileManagementFragment;
+import com.github.clans.fab.FloatingActionMenu;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.util.ArrayList;
@@ -51,7 +51,12 @@ public class MainActivity extends AppCompatActivity implements
         ProfileCreationFragment.OnProfileCreateFragmentClickListener{
 
     Toolbar toolbar;
-    FloatingActionButton fab;
+    com.github.clans.fab.FloatingActionButton menuFab1;
+    com.github.clans.fab.FloatingActionButton menuFab2;
+    com.github.clans.fab.FloatingActionButton menuFab3;
+    android.support.design.widget.FloatingActionButton fab;
+    FloatingActionMenu cvCreationFabMenu;
+
     DrawerLayout drawer;
     NavigationView navigationView;
     private static AppCompatActivity instance;
@@ -110,6 +115,9 @@ public class MainActivity extends AppCompatActivity implements
 
         setSupportActionBar(toolbar);
         fab.setVisibility(View.GONE);
+        cvCreationFabMenu.setVisibility(View.GONE);
+        cvCreationFabMenu.setClosedOnTouchOutside(true);
+        //cvCreationFabMenu.hideMenuButton(false);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
@@ -142,7 +150,12 @@ public class MainActivity extends AppCompatActivity implements
 
     public void getReferences(){
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (android.support.design.widget.FloatingActionButton) findViewById(R.id.fab);
+        menuFab1 = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.menu_fab_1);
+        menuFab2 = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.menu_fab_2);
+        menuFab3 = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.menu_fab_3);
+        cvCreationFabMenu = (FloatingActionMenu) findViewById(R.id.fab_menu);
+
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         View header = navigationView.getHeaderView(0);
@@ -327,10 +340,12 @@ public class MainActivity extends AppCompatActivity implements
     private void handleFabAndActionBarTitle(final Fragment currentFragment){
         if(currentFragment instanceof HomeFragment){
             fab.setVisibility(View.GONE);
+            cvCreationFabMenu.setVisibility(View.GONE);
             getSupportActionBar().setTitle("CV Creator");
 
         }else if(currentFragment instanceof CVManagementFragment){
             getSupportActionBar().setTitle("Manage CVs");
+            cvCreationFabMenu.setVisibility(View.GONE);
             fab.setVisibility(View.VISIBLE);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -343,22 +358,12 @@ public class MainActivity extends AppCompatActivity implements
 
         }else if(currentFragment instanceof CVCreationFragment){
             getSupportActionBar().setTitle("Create new CV");
-            fab.setVisibility(View.VISIBLE);
-            fab.setImageBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(),
-                    R.drawable.ic_check_white_24dp));
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //TODO: save data into shared prefs + add name of current profile
-                    hideKeyboard();
-                    Snackbar successSnackbar = Snackbar.make(getCurrentFocus(),"Successfully created new CV for CURRENT PROFILE",Snackbar.LENGTH_SHORT);
-                    successSnackbar.show();
-                    onBackPressed();
-                }
-            });
+            cvCreationFabMenu.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.GONE);
 
         }else if(currentFragment instanceof ProfileManagementFragment){
             getSupportActionBar().setTitle("Manage profiles");
+            cvCreationFabMenu.setVisibility(View.GONE);
             fab.setVisibility(View.VISIBLE);
             fab.setImageBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(),
                     R.drawable.ic_add_white_24dp));
@@ -371,6 +376,7 @@ public class MainActivity extends AppCompatActivity implements
 
         }else if(currentFragment instanceof ProfileEditFragment){
             getSupportActionBar().setTitle("Edit profile");
+            cvCreationFabMenu.setVisibility(View.GONE);
             fab.setVisibility(View.VISIBLE);
             fab.setImageBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(),
                     R.drawable.ic_check_white_24dp));
@@ -413,6 +419,7 @@ public class MainActivity extends AppCompatActivity implements
 
         }else if(currentFragment instanceof ProfileCreationFragment){
             getSupportActionBar().setTitle("Create new profile");
+            cvCreationFabMenu.setVisibility(View.GONE);
             fab.setVisibility(View.VISIBLE);
             fab.setImageBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(),
                     R.drawable.ic_check_white_24dp));

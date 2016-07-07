@@ -124,7 +124,6 @@ public class ProfileManagementFragment extends Fragment {
         editProfile.setIcon(DbBitmapUtility.resizeImage(
                 getContext(),
                 R.drawable.ic_mode_edit_white_24dp,DbBitmapUtility.dpToPx(getContext(),64),DbBitmapUtility.dpToPx(getContext(),64)));
-        Log.d("MENU ITEM = ","" + editProfile);
         deleteProfile = (MenuItem)menu.findItem(R.id.deleteProfile);
         deleteProfile.setIcon(DbBitmapUtility.resizeImage(
                 getContext(),

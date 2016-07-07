@@ -186,6 +186,18 @@ public class ProfileEditFragment extends Fragment implements SelectDateFragment.
     private int setInvalidDataErrors(){
         int errorCount = 0;
 
+        if(firstName.getEditText().getText().toString().trim().equals("")){
+            errorCount++;
+            firstName.setErrorEnabled(true);
+            firstName.setError("Cannot be left empty");
+        }
+
+        if(lastName.getEditText().getText().toString().trim().equals("")){
+            errorCount++;
+            lastName.setErrorEnabled(true);
+            lastName.setError("Cannot be left empty");
+        }
+
         if(!dobPattern.matcher(dateOfBirth.getEditText().getText().toString()).matches()){
             errorCount++;
             dateOfBirth.setErrorEnabled(true);

@@ -4,16 +4,21 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.example.radek.cv_creator.DbBitmapUtility;
 import com.example.radek.cv_creator.Profile;
 import com.example.radek.cv_creator.ProfileChoiceSpinnerAdapter;
 import com.example.radek.cv_creator.R;
@@ -27,6 +32,7 @@ public class CVCreationFragment extends Fragment {
     ArrayList<Profile> profilesResource;
     ProfileChoiceSpinnerAdapter profileChoiceSpinnerAdapter;
     static Bundle args;
+    MenuItem saveCV;
 
     public CVCreationFragment() {
         // Required empty public constructor
@@ -48,6 +54,8 @@ public class CVCreationFragment extends Fragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnCVCreationListener");
         }
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -63,7 +71,7 @@ public class CVCreationFragment extends Fragment {
         profileChoiceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //selectedWelcomeChoice = profileChoiceSpinner.getItemAtPosition(position).toString();
+
             }
 
             @Override
@@ -85,6 +93,28 @@ public class CVCreationFragment extends Fragment {
         profileChoiceSpinner.setAdapter(profileChoiceSpinnerAdapter);
 
         return fragmentView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.cv_creation_menu, menu);
+
+        saveCV = (MenuItem)menu.findItem(R.id.cv_creation_save);
+        saveCV.setIcon(DbBitmapUtility.resizeImage(
+                getContext(),
+                R.drawable.ic_save_white_24dp,DbBitmapUtility.dpToPx(getContext(),64),DbBitmapUtility.dpToPx(getContext(),64)));
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if(id==R.id.cv_creation_save){
+            Snackbar.make(getActivity().getCurrentFocus(),"SAVED CV",Snackbar.LENGTH_SHORT).show();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

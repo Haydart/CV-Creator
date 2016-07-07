@@ -14,6 +14,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -172,6 +174,18 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
 
     private int setInvalidDataErrors(){
         int errorCount = 0;
+
+        if(firstName.getEditText().getText().toString().trim().equals("")){
+            errorCount++;
+            firstName.setErrorEnabled(true);
+            firstName.setError("Cannot be left empty");
+        }
+
+        if(lastName.getEditText().getText().toString().trim().equals("")){
+            errorCount++;
+            lastName.setErrorEnabled(true);
+            lastName.setError("Cannot be left empty");
+        }
 
         if(!dobPattern.matcher(dateOfBirth.getEditText().getText().toString()).matches()){
             errorCount++;
