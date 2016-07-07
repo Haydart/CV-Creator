@@ -3,6 +3,7 @@ package com.example.radek.cv_creator;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,17 +39,15 @@ public class ProfileChoiceSpinnerAdapter extends ArrayAdapter<Profile> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final View rowView = inflater.inflate(R.layout.profile_choice_spinner, parent, false);
-        TextView name = (TextView)rowView.findViewById(R.id.nameTextView);
-        CircularImageView profileImageView = (CircularImageView) rowView.findViewById(R.id.manageProfilesPhotoImageViewMiniature);
+        TextView name = (TextView)rowView.findViewById(R.id.navDrawerProfileNameTextView);
+        TextView email = (TextView)rowView.findViewById(R.id.navDrawerProfileMailTextView);
+        CircularImageView profileImageView = (CircularImageView) rowView.findViewById(R.id.navDrawerCircularImageView);
 
         name.setText(profilesResource.get(position).getName());
+        email.setText((profilesResource.get(position).getEmail()));
         profileImageView.setImageBitmap(profilesResource.get(position).getPhoto());
+        profileImageView.setBorderColor(context.getResources().getColor(R.color.navDrawerSpinnerCircularImageViewBorder));
 
-        if(profilesResource.get(position).getGender().equals(context.getResources().getString(R.string.gender_option_1))){ //male
-            profileImageView.setBorderColor(context.getResources().getColor(R.color.colorPrimary));
-        }else if(profilesResource.get(position).getGender().equals(context.getResources().getString(R.string.gender_option_2))) { //female
-            profileImageView.setBorderColor(context.getResources().getColor(R.color.colorAccent));
-        }
         return rowView;
     }
 

@@ -71,7 +71,9 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
     }
 
     public Profile getNewProfile() {
-        return new Profile( firstName.getEditText().getText().toString().trim() + " " + lastName.getEditText().getText().toString().trim(),
+        return new Profile(
+                            -1, // -1 means temporary ID, it it then set to the autoincremented value the database gives
+                            firstName.getEditText().getText().toString().trim() + " " + lastName.getEditText().getText().toString().trim(),
                             checkedGender.getText().toString(),
                             emailAddress.getEditText().getText().toString(),
                             phoneNumber.getEditText().getText().toString(),

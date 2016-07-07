@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.ObjectConstructor;
@@ -35,6 +36,7 @@ public class ContentStorageManager
         dbHelper = new SQLiteDatabaseHelper(activityContext);
         database = dbHelper.getWritableDatabase();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activityContext);
+        this.activityContext = activityContext;
     }
 
     public static ContentStorageManager getInstance() {
@@ -95,8 +97,8 @@ public class ContentStorageManager
 
     public void addProfileToDatabase(Profile profile) throws SQLiteException {
         database = dbHelper.getWritableDatabase();
-
-        database.insert(DatabaseConstants.PROFILE_TABLE, null, getContentValuesForProfile(profile));
+        Toast.makeText(activityContext, "Adding " + profile.getName(), Toast.LENGTH_SHORT).show();
+        database.insert(DatabaseConstants.PROFILE_TABLE, null, getContentValuesForProfile(profile)); // profile ID is ignored - it was set by program, not by DB
         database.close();
     }
 
@@ -127,7 +129,7 @@ public class ContentStorageManager
         database = dbHelper.getReadableDatabase();
 
         String[] projection = {
-           DatabaseConstants.COLUMN_ID,
+                DatabaseConstants.COLUMN_ID,
                 DatabaseConstants.COLUMN_NAME,
                 DatabaseConstants.COLUMN_GENDER,
                 DatabaseConstants.COLUMN_EMAIL,
@@ -163,5 +165,18 @@ public class ContentStorageManager
         database.close();
 
         return profiles;
+    }
+
+    public int getHighestDatabaseID(){
+        int result = 0;
+        database = dbHelper.getReadableDatabase();
+
+        Cursor cursor = database.rawQuery("SELECT " + DatabaseConstants.COLUMN_ID + " FROM " + DatabaseConstants.PROFILE_TABLE +
+                                          " ORDER BY " + DatabaseConstants.COLUMN_ID + " DESC LIMIT 1",null);
+
+        cursor.moveToFirst();
+        result = cursor.getInt(0);
+        database.close();
+        return result;
     }
 }

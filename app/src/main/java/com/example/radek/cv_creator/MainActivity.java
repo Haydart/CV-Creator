@@ -25,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +60,9 @@ public class MainActivity extends AppCompatActivity implements
 
     DrawerLayout drawer;
     NavigationView navigationView;
+    Spinner navDrawerAccountChoiceSpinner;
+    ProfileChoiceSpinnerAdapter profileChoiceSpinnerAdapter;
+
     private static AppCompatActivity instance;
     public static AppCompatActivity getInstance(){
         return instance;
@@ -144,7 +148,6 @@ public class MainActivity extends AppCompatActivity implements
 
         fragmentTransaction.replace(R.id.fragmentsRelativeLayout,homeFragment);
         fragmentTransaction.addToBackStack(String.valueOf(homeFragment.getId()));
-        currentFragmentId = homeFragment.getId();
         fragmentTransaction.commit();
     }
 
@@ -329,11 +332,21 @@ public class MainActivity extends AppCompatActivity implements
 
     private void setNavViewProfile(){
         if(hasCurrentProfileChanged){
-            ((CircularImageView)findViewById(R.id.navDrawerCircularImageView)).setImageBitmap(userProfiles.get(activeProfileIndex).getPhoto());
-            ((CircularImageView)findViewById(R.id.navDrawerCircularImageView)).setBorderColor(Color.WHITE);
-            ((TextView)findViewById(R.id.navDrawerProfileNameTextView)).setText(userProfiles.get(activeProfileIndex).getName());
-            ((TextView)findViewById(R.id.navDrawerProfileMailTextView)).setText(userProfiles.get(activeProfileIndex).getEmail());
-            hasCurrentProfileChanged = false;
+            if(activeProfileIndex >= 0){
+                if(navDrawerAccountChoiceSpinner==null)
+                    navDrawerAccountChoiceSpinner = (Spinner) findViewById(R.id.profileChoiceSpinner);
+                profileChoiceSpinnerAdapter = new ProfileChoiceSpinnerAdapter(this, userProfiles);
+                profileChoiceSpinnerAdapter.setDropDownViewResource(R.layout.profile_choice_spinner);
+                navDrawerAccountChoiceSpinner.setAdapter(profileChoiceSpinnerAdapter);
+                navDrawerAccountChoiceSpinner.setSelection(activeProfileIndex);
+                hasCurrentProfileChanged = false;
+            }
+            else{ //after deletion, check if there are any elements to set to
+                if(userProfiles!=null & userProfiles.size()>0){
+                    activeProfileIndex = 0;
+                    setNavViewProfile();
+                }
+            }
         }
     }
 
@@ -393,6 +406,8 @@ public class MainActivity extends AppCompatActivity implements
                         Profile newlyEditedProfile;
                         newlyEditedProfile = profileEditFragment.getEditedProfile();
                         userProfiles.set(lastEditedProfileIndex,newlyEditedProfile);
+                        activeProfileIndex = lastEditedProfileIndex;
+                        setNavViewProfile();
 
                         try {
                             contentStorageManager.updateProfile(newlyEditedProfile);
@@ -434,7 +449,12 @@ public class MainActivity extends AppCompatActivity implements
                         successSnackbar.show();
                         Profile newlyCreatedProfile;
                         newlyCreatedProfile = profileCreationFragment.getNewProfile();
+                        newlyCreatedProfile.setID(contentStorageManager.getHighestDatabaseID()+1);
                         userProfiles.add(newlyCreatedProfile);
+                        activeProfileIndex = userProfiles.size()-1; //the last added profile becomes active
+                        hasCurrentProfileChanged = true;
+                        setNavViewProfile();
+
                         try {
                             contentStorageManager.addProfileToDatabase(newlyCreatedProfile);
                         } catch (SQLiteException ex) {
@@ -504,10 +524,13 @@ public class MainActivity extends AppCompatActivity implements
 
                 .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-
+                        Toast.makeText(getApplicationContext(), "deleting "+ userProfilePosition , Toast.LENGTH_SHORT).show();
                         contentStorageManager.deleteProfile(userProfiles.get(userProfilePosition).getID());
                         userProfiles.remove(userProfilePosition);
                         profileManagementFragment.notifyProfilesResourceChanged(userProfiles);
+                        activeProfileIndex = -1; // changed to 0 in setNav...() if userProfiles.size > 0
+                        hasCurrentProfileChanged = true;
+                        setNavViewProfile();
                         dialog.dismiss();
                     }
                 })

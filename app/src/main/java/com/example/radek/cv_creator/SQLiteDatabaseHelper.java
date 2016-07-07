@@ -15,7 +15,7 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_TABLE_PROFILES = "CREATE TABLE " + DatabaseConstants.PROFILE_TABLE
             + "("
-            + DatabaseConstants.COLUMN_ID + " integer primary key, "
+            + DatabaseConstants.COLUMN_ID + " integer primary key AUTOINCREMENT, "
             + DatabaseConstants.COLUMN_NAME + " text not null, "
             + DatabaseConstants.COLUMN_GENDER + " text not null, "
             + DatabaseConstants.COLUMN_EMAIL + " text not null, "

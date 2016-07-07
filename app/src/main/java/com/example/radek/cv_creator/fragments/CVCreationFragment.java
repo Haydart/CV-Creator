@@ -30,7 +30,6 @@ public class CVCreationFragment extends Fragment {
     FragmentActivity activity;
     Spinner profileChoiceSpinner;
     ArrayList<Profile> profilesResource;
-    ProfileChoiceSpinnerAdapter profileChoiceSpinnerAdapter;
     static Bundle args;
     MenuItem saveCV;
 
@@ -68,17 +67,7 @@ public class CVCreationFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        profileChoiceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+        // set listeners here
     }
 
     @Override
@@ -86,12 +75,6 @@ public class CVCreationFragment extends Fragment {
         // Inflate the layout for this fragment
 
         View fragmentView = inflater.inflate(R.layout.fragment_cvcreation, container, false);
-        profileChoiceSpinner = (Spinner) fragmentView.findViewById(R.id.profileChoiceSpinner);
-        profilesResource = (ArrayList<Profile>) args.get("profilesResource");
-        profileChoiceSpinnerAdapter = new ProfileChoiceSpinnerAdapter(getActivity(), profilesResource);
-        profileChoiceSpinnerAdapter.setDropDownViewResource(R.layout.profile_choice_spinner);
-        profileChoiceSpinner.setAdapter(profileChoiceSpinnerAdapter);
-
         return fragmentView;
     }
 
@@ -122,7 +105,6 @@ public class CVCreationFragment extends Fragment {
         super.onDetach();
         profileChoiceSpinner = null;
         profilesResource = null;
-        profileChoiceSpinnerAdapter = null;
         args = null;
         activity = null;
     }
