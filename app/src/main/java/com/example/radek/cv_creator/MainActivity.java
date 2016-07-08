@@ -245,6 +245,7 @@ public class MainActivity extends AppCompatActivity implements
             fragment.setArguments(bundle);
             cvCreationFragment = (CVCreationFragment)fragment;
             displayFragment(cvCreationFragment, ADD_TO_BACKSTACK);
+            cvCreationFragment.setActiveProfileIndex(activeProfileIndex);
 
         } else if (id == R.id.nav_manage_profiles) {
             Fragment fragment = new ProfileManagementFragment();
@@ -392,7 +393,6 @@ public class MainActivity extends AppCompatActivity implements
             menuFab1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(getApplicationContext(), "CLICKED FAB 1", Toast.LENGTH_SHORT).show();
                     cvCreationFragment.addNewObjectivesItem();
                 }
             });

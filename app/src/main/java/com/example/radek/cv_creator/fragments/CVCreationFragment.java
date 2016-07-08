@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,16 +31,51 @@ import java.util.ArrayList;
 
 public class CVCreationFragment extends Fragment {
     OnCVCreationListener onCVCreationListener;
-    FragmentActivity activity;
+    Activity activity;
     Spinner profileChoiceSpinner;
     ArrayList<Profile> profilesResource;
     static Bundle args;
     MenuItem saveCV;
+    int activeProfileIndex = 0;
+
+    TextView nameTextView;
+    TextView occupationTextView;
+    TextView emailTextView;
+    TextView phoneNUmberTextView;
+    TextView dobTextView;
+    TextView address1TextView;
+    TextView address2TextView;
+    TextView address3TextView;
 
     LinearLayout objectivesLinearLayout;
+    LinearLayout skillsLinearLayout;
+    LinearLayout personalTraitsLinearLayout;
+    LinearLayout experienceLinearLayout;
+    LinearLayout employersLinearLayout;
+    LinearLayout interestsLinearLayout;
+
+    ArrayList<RelativeLayout> relativeLayouts;
 
     public CVCreationFragment() {
         // Required empty public constructor
+    }
+
+    public void getReferences(){
+        nameTextView = (TextView) getView().findViewById(R.id.cvNameTextView);
+        occupationTextView = (TextView)getView().findViewById(R.id.cvOccupationTextView);
+        emailTextView = (TextView)getView().findViewById(R.id.cvEmailTextView);
+        phoneNUmberTextView = (TextView) getView().findViewById(R.id.cvPhoneNumberTextView);
+        dobTextView = (TextView) getView().findViewById(R.id.cvDOBTextView);
+        address1TextView = (TextView) getView().findViewById(R.id.cvAddress1TextView);
+        address2TextView = (TextView) getView().findViewById(R.id.cvAddress2TextView);
+        address3TextView = (TextView) getView().findViewById(R.id.cvAddress3TextView);
+
+        objectivesLinearLayout = (LinearLayout) getView().findViewById(R.id.cvObjectivesLinearLayout);
+        skillsLinearLayout = (LinearLayout)getView().findViewById(R.id.cvSkillsLinearLayout);
+        personalTraitsLinearLayout = (LinearLayout) getView().findViewById(R.id.cvPersonalTraitsLinearLayout);
+        experienceLinearLayout = (LinearLayout) getView().findViewById(R.id.cvExperienceLinearLayout);
+        employersLinearLayout = (LinearLayout) getView().findViewById(R.id.cvEmployersLinearLayout);
+        interestsLinearLayout = (LinearLayout) getView().findViewById(R.id.cvInterestsLinearLayout);
     }
 
     public static void setArgumentsBundle(Bundle bundle){
@@ -49,11 +85,12 @@ public class CVCreationFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        profilesResource = new ArrayList<>();
+        args = getArguments();
+        profilesResource = (ArrayList<Profile>) args.get("profilesResource");
 
         try {
             onCVCreationListener = (OnCVCreationListener) context;
-            activity = (FragmentActivity) context;
+            activity = (Activity) context;
 
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnCVCreationListener");
@@ -65,22 +102,26 @@ public class CVCreationFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        args = getArguments();
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        objectivesLinearLayout = (LinearLayout) getView().findViewById(R.id.cvObjectivesLinearLayout);
         // set listeners here
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         View fragmentView = inflater.inflate(R.layout.fragment_cvcreation, container, false);
         return fragmentView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        getReferences();
+        setProfileInfo();
     }
 
     @Override
@@ -112,6 +153,25 @@ public class CVCreationFragment extends Fragment {
         profilesResource = null;
         args = null;
         activity = null;
+    }
+
+    public void setActiveProfileIndex(int index){
+        this.activeProfileIndex = index;
+    }
+
+    public void setProfileInfo(){
+        if(profilesResource!=null & profilesResource.size()>0){
+            nameTextView.setText(profilesResource.get(activeProfileIndex).getName());
+            emailTextView.setText(profilesResource.get(activeProfileIndex).getEmail());
+            dobTextView.setText(profilesResource.get(activeProfileIndex).getDOB());
+            phoneNUmberTextView.setText(profilesResource.get(activeProfileIndex).getPhoneNumber());
+            address1TextView.setText(profilesResource.get(activeProfileIndex).getAddressLine1());
+            address2TextView.setText(profilesResource.get(activeProfileIndex).getAddressLine2());
+            address3TextView.setText(profilesResource.get(activeProfileIndex).getAddressLine3());
+        }else{
+            Toast.makeText(getContext(), "no profiles available", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public void addNewObjectivesItem(){
