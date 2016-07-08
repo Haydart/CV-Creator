@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.view.menu.ActionMenuItem;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -40,7 +39,6 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
@@ -62,6 +60,9 @@ public class MainActivity extends AppCompatActivity implements
     NavigationView navigationView;
     Spinner navDrawerAccountChoiceSpinner;
     ProfileChoiceSpinnerAdapter profileChoiceSpinnerAdapter;
+    CircularImageView navDrawerPlaceholderCircularImage;
+    TextView navDrawerPlaceholderNameTextView;
+
 
     private static AppCompatActivity instance;
     public static AppCompatActivity getInstance(){
@@ -331,10 +332,20 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void setNavViewProfile(){
+
+        if(navDrawerAccountChoiceSpinner==null)
+            navDrawerAccountChoiceSpinner = (Spinner) findViewById(R.id.profileChoiceSpinner);
+        if(navDrawerPlaceholderCircularImage == null)
+            navDrawerPlaceholderCircularImage = (CircularImageView) findViewById(R.id.cvPhotoImageView);
+        if(navDrawerPlaceholderNameTextView == null)
+            navDrawerPlaceholderNameTextView = (TextView) findViewById(R.id.navDrawerPlaceholderProfileNameTextView);
+
         if(hasCurrentProfileChanged){
-            if(activeProfileIndex >= 0){
-                if(navDrawerAccountChoiceSpinner==null)
-                    navDrawerAccountChoiceSpinner = (Spinner) findViewById(R.id.profileChoiceSpinner);
+            if(activeProfileIndex >= 0 && userProfiles!= null && userProfiles.size()>0){
+                navDrawerPlaceholderCircularImage.setVisibility(View.GONE);
+                navDrawerPlaceholderNameTextView.setVisibility(View.GONE);
+                navDrawerAccountChoiceSpinner.setVisibility(View.VISIBLE);
+
                 profileChoiceSpinnerAdapter = new ProfileChoiceSpinnerAdapter(this, userProfiles);
                 profileChoiceSpinnerAdapter.setDropDownViewResource(R.layout.profile_choice_spinner);
                 navDrawerAccountChoiceSpinner.setAdapter(profileChoiceSpinnerAdapter);
@@ -345,6 +356,10 @@ public class MainActivity extends AppCompatActivity implements
                 if(userProfiles!=null & userProfiles.size()>0){
                     activeProfileIndex = 0;
                     setNavViewProfile();
+                }else{
+                    navDrawerAccountChoiceSpinner.setVisibility(View.GONE);
+                    navDrawerPlaceholderCircularImage.setVisibility(View.VISIBLE);
+                    navDrawerPlaceholderNameTextView.setVisibility(View.VISIBLE);
                 }
             }
         }
@@ -373,6 +388,14 @@ public class MainActivity extends AppCompatActivity implements
             getSupportActionBar().setTitle("Create new CV");
             cvCreationFabMenu.setVisibility(View.VISIBLE);
             fab.setVisibility(View.GONE);
+
+            menuFab1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(getApplicationContext(), "CLICKED FAB 1", Toast.LENGTH_SHORT).show();
+                    cvCreationFragment.addNewObjectivesItem();
+                }
+            });
 
         }else if(currentFragment instanceof ProfileManagementFragment){
             getSupportActionBar().setTitle("Manage profiles");

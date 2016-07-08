@@ -175,7 +175,8 @@ public class ContentStorageManager
                                           " ORDER BY " + DatabaseConstants.COLUMN_ID + " DESC LIMIT 1",null);
 
         cursor.moveToFirst();
-        result = cursor.getInt(0);
+        if(cursor.getCount()>0)
+            result = cursor.getInt(0);
         database.close();
         return result;
     }

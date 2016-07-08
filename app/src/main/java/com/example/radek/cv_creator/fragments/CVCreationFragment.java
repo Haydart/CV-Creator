@@ -16,7 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.radek.cv_creator.DbBitmapUtility;
 import com.example.radek.cv_creator.Profile;
@@ -32,6 +35,8 @@ public class CVCreationFragment extends Fragment {
     ArrayList<Profile> profilesResource;
     static Bundle args;
     MenuItem saveCV;
+
+    LinearLayout objectivesLinearLayout;
 
     public CVCreationFragment() {
         // Required empty public constructor
@@ -66,7 +71,7 @@ public class CVCreationFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        objectivesLinearLayout = (LinearLayout) getView().findViewById(R.id.cvObjectivesLinearLayout);
         // set listeners here
     }
 
@@ -107,6 +112,20 @@ public class CVCreationFragment extends Fragment {
         profilesResource = null;
         args = null;
         activity = null;
+    }
+
+    public void addNewObjectivesItem(){
+        TextView textView = new TextView(getContext());
+        textView.setText("BLABLAB");
+        textView.setId(View.generateViewId());
+        textView.setTextSize(10);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "view click", Toast.LENGTH_SHORT).show();
+            }
+        });
+        objectivesLinearLayout.addView(textView);
     }
 
     public interface OnCVCreationListener{

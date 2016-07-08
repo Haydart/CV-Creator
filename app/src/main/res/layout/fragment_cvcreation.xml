@@ -1,15 +1,323 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.radek.cv_creator.fragments.CVCreationFragment">
+    android:id="@+id/cvScrollView"
+    tools:context="com.example.radek.cv_creator.fragments.CVCreationFragment"
+    android:fillViewport="false">
 
     <!-- TODO: Update blank fragment layout -->
 
-  <!--  <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/profileChoiceSpinner"
-        android:layout_centerHorizontal="true" /> -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-</RelativeLayout>
+            <RelativeLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_blue_light"
+                android:id="@+id/cvTopPanelLinearLayout">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="0dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="0dp">
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/cvNameLinearLayout"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="Name"
+                            android:id="@+id/cvNameTextView"
+                            android:textStyle="bold"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_gravity="left|right"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="16dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="Occupation"
+                            android:id="@+id/cvOccupationTextView"
+                            android:layout_alignParentEnd="true"
+                            android:layout_gravity="left"
+                            android:textSize="12dp"
+                            android:textColor="#FFFFFFFF"
+                            android:layout_marginLeft="16dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/cvContactInformationLinearLayout"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingBottom="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginLeft="32dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/cvEmailTextView"
+                            android:textColor="#ffffff"
+                            android:textSize="9dp"
+                            android:layout_gravity="left"
+                            android:text="email" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/cvDOBTextView"
+                            android:textColor="#ffffff"
+                            android:textSize="9dp"
+                            android:layout_gravity="left"
+                            android:text="date of birth" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/cvPhoneNumberTextView"
+                            android:textColor="#ffffff"
+                            android:textSize="9dp"
+                            android:layout_gravity="left"
+                            android:text="phone number " />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="address 1"
+                            android:id="@+id/cvAddress1TextView"
+                            android:textColor="#ffffff"
+                            android:textSize="9dp"
+                            android:layout_gravity="left" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="address2"
+                            android:id="@+id/cvAddress2TextView"
+                            android:textColor="#ffffff"
+                            android:textSize="9dp"
+                            android:layout_gravity="left" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="address 3"
+                            android:id="@+id/cvAddress3TextView"
+                            android:textColor="#ffffff"
+                            android:textSize="9dp"
+                            android:layout_gravity="left" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/cvPhotoImageView"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:paddingTop="@dimen/nav_header_vertical_spacing"
+                    android:src="@drawable/blank_profile_pic"
+                    app:civ_border_color="#ffffffff"
+                    app:civ_border_width="8dp"
+                    app:civ_shadow="true"
+                    android:visibility="visible"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentStart="false"
+                    android:layout_margin="8dp" />
+
+            </RelativeLayout>
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:id="@+id/cvMainContentTableLayout"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/cvObjectivesTableRow">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Objectives"
+                        android:id="@+id/cvObjectivesTitle"
+                        android:textSize="14dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_weight=".3" />
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/cvObjectivesLinearLayout"
+                        android:layout_weight=".7">
+
+                    </LinearLayout>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/cvPersonalTraitsTableRow">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Personal Traits"
+                        android:id="@+id/cvPersonalTraitsTitle"
+                        android:textSize="14dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_weight=".3" />
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/cvPersonalTraitsLinearLayout"
+                        android:layout_weight=".7" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/cvSkillsTableRow">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Skills"
+                        android:id="@+id/cvSkillsTitle"
+                        android:textSize="14dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_weight=".3" />
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/cvSkillsLinearLayout"
+                        android:layout_weight=".7" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/cvExperienceTableRow">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Experience"
+                        android:id="@+id/cvExperienceTitle"
+                        android:textSize="14dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_weight=".3" />
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/cvExperienceLinearLayout"
+                        android:layout_weight=".7" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/cvEmployersTableRow">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Employers"
+                        android:id="@+id/cvEmployersTitle"
+                        android:textSize="14dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_weight=".3" />
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/cvEmployersLinearLayout"
+                        android:layout_weight=".7" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/cvInterestsTableRow">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Interests"
+                        android:id="@+id/cvInterestsTitle"
+                        android:textSize="14dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_weight=".3" />
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/cvInterestsLinearLayout"
+                        android:layout_weight=".7" />
+                </TableRow>
+            </TableLayout>
+
+        </LinearLayout>
+    </ScrollView>

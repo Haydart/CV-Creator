@@ -32,4 +32,35 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true" />
 
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/cvPhotoImageView"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:src="@drawable/blank_profile_pic"
+        app:civ_border_color="@color/circularImageViewBorder"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:ellipsize="end"
+        android:scrollHorizontally="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:text="Unknown Profile"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        android:id="@+id/navDrawerPlaceholderProfileNameTextView"
+        android:textColor="#ffffff"
+        android:layout_alignBottom="@+id/profileChoiceSpinner"
+        android:layout_toEndOf="@+id/cvPhotoImageView"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="8dp" />
+
 </RelativeLayout>

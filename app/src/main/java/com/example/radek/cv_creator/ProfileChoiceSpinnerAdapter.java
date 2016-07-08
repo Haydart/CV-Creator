@@ -3,7 +3,6 @@ package com.example.radek.cv_creator;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,9 +38,9 @@ public class ProfileChoiceSpinnerAdapter extends ArrayAdapter<Profile> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final View rowView = inflater.inflate(R.layout.profile_choice_spinner, parent, false);
-        TextView name = (TextView)rowView.findViewById(R.id.navDrawerProfileNameTextView);
+        TextView name = (TextView)rowView.findViewById(R.id.navDrawerPlaceholderProfileNameTextView);
         TextView email = (TextView)rowView.findViewById(R.id.navDrawerProfileMailTextView);
-        CircularImageView profileImageView = (CircularImageView) rowView.findViewById(R.id.navDrawerCircularImageView);
+        CircularImageView profileImageView = (CircularImageView) rowView.findViewById(R.id.cvPhotoImageView);
 
         name.setText(profilesResource.get(position).getName());
         email.setText((profilesResource.get(position).getEmail()));

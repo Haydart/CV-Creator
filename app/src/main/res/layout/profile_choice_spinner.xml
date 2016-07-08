@@ -6,7 +6,7 @@
 
     <com.mikhaellopez.circularimageview.CircularImageView
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/navDrawerCircularImageView"
+        android:id="@+id/cvPhotoImageView"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
@@ -24,9 +24,9 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textSize="14dp"
         android:textStyle="bold"
-        android:id="@+id/navDrawerProfileNameTextView"
-        android:layout_alignTop="@+id/navDrawerCircularImageView"
-        android:layout_toEndOf="@+id/navDrawerCircularImageView"
+        android:id="@+id/navDrawerPlaceholderProfileNameTextView"
+        android:layout_alignTop="@+id/cvPhotoImageView"
+        android:layout_toEndOf="@+id/cvPhotoImageView"
         android:layout_marginStart="8dp"
         android:layout_marginTop="10dp"
         android:textColor="#ffffff" />
@@ -40,9 +40,9 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textSize="10dp"
         android:id="@+id/navDrawerProfileMailTextView"
-        android:layout_alignBottom="@+id/navDrawerCircularImageView"
-        android:layout_alignStart="@+id/navDrawerProfileNameTextView"
-        android:layout_below="@+id/navDrawerProfileNameTextView"
+        android:layout_alignBottom="@+id/cvPhotoImageView"
+        android:layout_alignStart="@+id/navDrawerPlaceholderProfileNameTextView"
+        android:layout_below="@+id/navDrawerPlaceholderProfileNameTextView"
         android:gravity="top|left"
         android:textColor="#ffffff" />
 
