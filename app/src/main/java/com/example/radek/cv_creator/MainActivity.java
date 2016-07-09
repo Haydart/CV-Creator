@@ -229,7 +229,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
 
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -237,8 +236,33 @@ public class MainActivity extends AppCompatActivity implements
             if(getSupportFragmentManager().getBackStackEntryCount()==1)
                 finish();
             else{
-                super.onBackPressed();
-                handleFabAndActionBarTitle(fragmentManager.findFragmentById(R.id.fragmentsRelativeLayout));
+                if(getSupportFragmentManager().findFragmentById(R.id.fragmentsRelativeLayout) instanceof CVCreationFragment)
+                    new AlertDialog.Builder(this)
+                            .setTitle("Warning")
+                            .setMessage("Any unsaved changes to CV will be lost!")
+                            .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    dialog.dismiss();
+                                }
+                            })
+
+                            .setNegativeButton("exit anyway", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    MainActivity.super.onBackPressed();
+                                    handleFabAndActionBarTitle(getSupportFragmentManager().findFragmentById(R.id.fragmentsRelativeLayout));
+                                    dialog.dismiss();
+                                }
+                            })
+
+                            .setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).create().show();
+                else{
+                    super.onBackPressed();
+                    handleFabAndActionBarTitle(getSupportFragmentManager().findFragmentById(R.id.fragmentsRelativeLayout));
+                }
             }
         }
     }
