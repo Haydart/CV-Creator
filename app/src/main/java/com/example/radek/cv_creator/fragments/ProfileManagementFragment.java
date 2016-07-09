@@ -4,32 +4,22 @@ package com.example.radek.cv_creator.fragments;
  * Created by Radek on 2016-07-01.
  */
 import android.content.Context;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.Button;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.radek.cv_creator.DbBitmapUtility;
 import com.example.radek.cv_creator.Profile;
-import com.example.radek.cv_creator.ProfileListViewAdapter;
+import com.example.radek.cv_creator.adapters.ProfileListViewAdapter;
 import com.example.radek.cv_creator.R;
 
 import java.util.ArrayList;

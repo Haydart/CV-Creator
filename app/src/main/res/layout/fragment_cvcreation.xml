@@ -164,7 +164,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:id="@+id/cvObjectivesTableRow">
+                    android:id="@+id/cvObjectivesTableRow"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="0dp"
@@ -173,17 +174,20 @@
                         android:text="Objectives"
                         android:id="@+id/cvObjectivesTitle"
                         android:textSize="14dp"
-                        android:layout_gravity="center"
+                        android:layout_gravity="top|center_horizontal"
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="4dp"
-                        android:layout_weight=".3" />
+                        android:layout_weight=".3"
+                        android:textColor="@android:color/holo_blue_dark" />
 
                     <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:id="@+id/cvObjectivesLinearLayout"
-                        android:layout_weight=".7">
+                        android:layout_weight=".7"
+                        android:paddingLeft="4dp"
+                        android:paddingTop="4dp">
 
                     </LinearLayout>
                 </TableRow>
@@ -192,7 +196,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:id="@+id/cvPersonalTraitsTableRow">
+                    android:id="@+id/cvPersonalTraitsTableRow"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="0dp"
@@ -201,24 +206,28 @@
                         android:text="Personal Traits"
                         android:id="@+id/cvPersonalTraitsTitle"
                         android:textSize="14dp"
-                        android:layout_gravity="center"
+                        android:layout_gravity="top|center_horizontal"
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="4dp"
-                        android:layout_weight=".3" />
+                        android:layout_weight=".3"
+                        android:textColor="@android:color/holo_blue_dark" />
 
                     <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:id="@+id/cvPersonalTraitsLinearLayout"
-                        android:layout_weight=".7" />
+                        android:layout_weight=".7"
+                        android:paddingLeft="4dp"
+                        android:paddingTop="4dp" />
                 </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:id="@+id/cvSkillsTableRow">
+                    android:id="@+id/cvSkillsTableRow"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="0dp"
@@ -227,24 +236,28 @@
                         android:text="Skills"
                         android:id="@+id/cvSkillsTitle"
                         android:textSize="14dp"
-                        android:layout_gravity="center"
+                        android:layout_gravity="top|center_horizontal"
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="4dp"
-                        android:layout_weight=".3" />
+                        android:layout_weight=".3"
+                        android:textColor="@android:color/holo_blue_dark" />
 
                     <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:id="@+id/cvSkillsLinearLayout"
-                        android:layout_weight=".7" />
+                        android:layout_weight=".7"
+                        android:paddingLeft="4dp"
+                        android:paddingTop="4dp" />
                 </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:id="@+id/cvExperienceTableRow">
+                    android:id="@+id/cvExperienceTableRow"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="0dp"
@@ -253,24 +266,28 @@
                         android:text="Experience"
                         android:id="@+id/cvExperienceTitle"
                         android:textSize="14dp"
-                        android:layout_gravity="center"
+                        android:layout_gravity="top|center_horizontal"
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="4dp"
-                        android:layout_weight=".3" />
+                        android:layout_weight=".3"
+                        android:textColor="@android:color/holo_blue_dark" />
 
                     <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:id="@+id/cvExperienceLinearLayout"
-                        android:layout_weight=".7" />
+                        android:layout_weight=".7"
+                        android:paddingLeft="4dp"
+                        android:paddingTop="4dp" />
                 </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:id="@+id/cvEmployersTableRow">
+                    android:id="@+id/cvEmployersTableRow"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="0dp"
@@ -279,24 +296,28 @@
                         android:text="Employers"
                         android:id="@+id/cvEmployersTitle"
                         android:textSize="14dp"
-                        android:layout_gravity="center"
+                        android:layout_gravity="top|center_horizontal"
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="4dp"
-                        android:layout_weight=".3" />
+                        android:layout_weight=".3"
+                        android:textColor="@android:color/holo_blue_dark" />
 
                     <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:id="@+id/cvEmployersLinearLayout"
-                        android:layout_weight=".7" />
+                        android:layout_weight=".7"
+                        android:paddingLeft="4dp"
+                        android:paddingTop="4dp" />
                 </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:id="@+id/cvInterestsTableRow">
+                    android:id="@+id/cvInterestsTableRow"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="0dp"
@@ -305,17 +326,20 @@
                         android:text="Interests"
                         android:id="@+id/cvInterestsTitle"
                         android:textSize="14dp"
-                        android:layout_gravity="center"
+                        android:layout_gravity="top|center_horizontal"
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="4dp"
-                        android:layout_weight=".3" />
+                        android:layout_weight=".3"
+                        android:textColor="@android:color/holo_blue_dark" />
 
                     <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:id="@+id/cvInterestsLinearLayout"
-                        android:layout_weight=".7" />
+                        android:layout_weight=".7"
+                        android:paddingLeft="4dp"
+                        android:paddingTop="4dp" />
                 </TableRow>
             </TableLayout>
 

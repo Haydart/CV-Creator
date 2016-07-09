@@ -1,0 +1,162 @@
+[33mcommit 7bc60e9af951b0427424b459f3a8cf18f0b19e0e[m
+Author: Haydart <makowiecki.radoslaw@gmail.com>
+Date:   Fri Jul 8 17:12:38 2016 +0200
+
+    Fix nullptr at cv creation get references
+
+[33mcommit 05ebbd890ff59c62931253a87113424d5e6c3a74[m
+Author: Haydart <makowiecki.radoslaw@gmail.com>
+Date:   Fri Jul 8 11:36:31 2016 +0200
+
+    Setup cv creation fragment layout
+
+[33mcommit 0d7bbe596c752d83c7571f013e36f7b343f7fdd9[m
+Author: Haydart <makowiecki.radoslaw@gmail.com>
+Date:   Thu Jul 7 20:35:33 2016 +0200
+
+    Fixed db profile ID bug & completed active profile changing
+
+[33mcommit b7b234b8a4e8f1b5ced790ed6d0bb1fc4f87a2d5[m
+Author: Haydart <makowiecki.radoslaw@gmail.com>
+Date:   Thu Jul 7 03:02:22 2016 +0200
+
+    Add CV creation menu foundations
+
+[33mcommit 181507ead952f508f7b10ee3e2e34addd89c3ce3[m
+Author: Haydart <makowiecki.radoslaw@gmail.com>
+Date:   Wed Jul 6 18:20:13 2016 +0200
+
+    Fix action bar menu item visibility bug & remove name pattern matching
+
+[33mcommit a9b0ca9b0d3a9f51fa01128f5dd7d85a8aab5510[m
+Author: Haydart <makowiecki.radoslaw@gmail.com>
+Date:   Wed Jul 6 13:20:42 2016 +0200
+
+    Complete profile deletion feature
+
+[33mcommit cc1c91ed7dd1fed63572d8e2ada78bf2f9516f4b[m
+Author: Haydart <makowiecki.radoslaw@gmail.com>
+Date:   Wed Jul 6 06:51:43 2016 +0200
+
+    Complete profile edit & fix refreshing nav drawer header info
+
+[33mcommit f194dc45dd1cc821568101efc401c781235ee864[m
+Author: Haydart <makowiecki.radoslaw@gmail.com>
+Date:   Wed Jul 6 06:15:39 2016 +0200
+
+    Complete profile management & edit profile
+
+[33mcommit df2a42994601829f2aa1710c91cba14cc49878b5[m
+Author: Haydart <makowiecki.radoslaw@gmail.com>
+Date:   Wed Jul 6 01:05:36 2016 +0200
+
+    Complete profiles management expandable list child view
+
+[33mcommit 66b56706c147da7e7a9529e2d705d79ef04447bf[m
+Author: Haydart <makowiecki.radoslaw@gmail.com>
+Date:   Tue Jul 5 16:32:36 2016 +0200
+
+    Populate profile management expandable list & fix flow bugs
+
+[33mcommit 332a8e561507a4d9710bf23c329e322146908b06[m
+Author: Haydart <makowiecki.radoslaw@gmail.com>
+Date:   Tue Jul 5 02:17:45 2016 +0200
+
+    Reallocate FAB & Title bar management & successfully pop fragment back stack
+
+[33mcommit cba640429024915d272b5d76856461255f651115[m
+Author: Haydart <makowiecki.radoslaw@gmail.com>
+Date:   Mon Jul 4 19:56:03 2016 +0200
+
+    Fix OOM SQLite bug & add profile database loading
+
+[33mcommit 94194ba2683a5768ff5254f9d15eb852cc13f6de[m
+Author: Haydart <makowiecki.radoslaw@gmail.com>
+Date:   Mon Jul 4 16:47:09 2016 +0200
+
+    Add SQLite database insertion & complete the profile creation fragment
+
+[33mcommit 0344cd8aa9e7489d7946908e3a6332bc90c98128[m
+Author: Haydart <makowiecki.radoslaw@gmail.com>
+Date:   Sun Jul 3 22:03:24 2016 +0200
+
+    Make home fragment main + snackbar notice if no profiles created
+
+[33mcommit dcac27465168d3f124815492026130850a202fd2[m
+Author: Haydart <makowiecki.radoslaw@gmail.com>
+Date:   Sun Jul 3 03:28:25 2016 +0200
+
+    Add user profiles reloading
+
+[33mcommit e35ef0ab04eca8d24b5b540d379955ff36d1ff05[m
+Author: Haydart <makowiecki.radoslaw@gmail.com>
+Date:   Sun Jul 3 02:47:12 2016 +0200
+
+    Rearrange profile DOB storage & fill DOB Edit View on DateDialog feedback
+
+[33mcommit d0064a7e8fcf027835741f6ea32ed522a0d68cda[m
+Author: Haydart <makowiecki.radoslaw@gmail.com>
+Date:   Sun Jul 3 01:45:32 2016 +0200
+
+    Fix back stack fragment pop bug (displaying blank fragment)
+
+[33mcommit 61cb25cbf37fe8675971614a48deec3e45d3d11b[m
+Author: Haydart <makowiecki.radoslaw@gmail.com>
+Date:   Sun Jul 3 00:54:47 2016 +0200
+
+    Fix bug with detaching separate, not displayed fragments
+
+[33mcommit 90d449881afb8beaa649dca6cde48ad990d1a19d[m
+Author: Haydart <makowiecki.radoslaw@gmail.com>
+Date:   Sat Jul 2 23:39:23 2016 +0200
+
+    Add profile creation data validation & fix add photo double click bug
+
+[33mcommit b43e9e0ee9f9dc01be18b9e068bcc9d2f6c9b9d5[m
+Author: Haydart <makowiecki.radoslaw@gmail.com>
+Date:   Sat Jul 2 16:25:30 2016 +0200
+
+    Handle DOB Date Picker feedback to fragment
+
+[33mcommit a530b1646dee12327e79303b76e7ce9d3fa0711e[m
+Author: Haydart <makowiecki.radoslaw@gmail.com>
+Date:   Sat Jul 2 16:06:08 2016 +0200
+
+    Construct profile creation fragment & rearrange FAB displaying time
+
+[33mcommit 820382d94c78d80cbb31dbc334084fdc1a8a4da0[m
+Author: Haydart <makowiecki.radoslaw@gmail.com>
+Date:   Sat Jul 2 03:04:09 2016 +0200
+
+    Add FAB fragment exchange flow & fix bug with CircleImage View (bitmap not getting displayed)
+
+[33mcommit fd39e797f8d1350ae0ab2868fb33cb1e7cebe741[m
+Author: Haydart <makowiecki.radoslaw@gmail.com>
+Date:   Fri Jul 1 21:06:21 2016 +0200
+
+    Setup menu flow of fragments & add icons to drawer
+
+[33mcommit 916e88a38d59c098e7b11db79a350a4f56ba46cd[m
+Author: Haydart <makowiecki.radoslaw@gmail.com>
+Date:   Fri Jul 1 15:45:26 2016 +0200
+
+    Begin CV Creation Fragment & head toward Material Design
+
+[33mcommit efb27eb338a7a801ddbe9f98775a30c84ed0493c[m
+Merge: e02d8dd 24b252a
+Author: Haydart <makowiecki.radoslaw@gmail.com>
+Date:   Thu Jun 30 04:02:51 2016 +0200
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit e02d8dd957486f1ef0c33a742c93d1125d20af1c[m
+Author: Haydart <makowiecki.radoslaw@gmail.com>
+Date:   Thu Jun 30 04:01:11 2016 +0200
+
+    Add basic functionality (navdrawer, default camera service, basic fragment management)
+
+[33mcommit 24b252af0e74e846f4d189ee062252ea0f7e81f0[m
+Author: Haydart <makowiecki.radoslaw@gmail.com>
+Date:   Mon Jun 27 23:32:13 2016 +0200
+
+    Initial commit

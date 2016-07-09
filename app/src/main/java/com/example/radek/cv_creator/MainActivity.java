@@ -28,6 +28,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.radek.cv_creator.adapters.ProfileChoiceSpinnerAdapter;
 import com.example.radek.cv_creator.fragments.CVCreationFragment;
 import com.example.radek.cv_creator.fragments.CVManagementFragment;
 import com.example.radek.cv_creator.fragments.HomeFragment;
@@ -53,6 +54,9 @@ public class MainActivity extends AppCompatActivity implements
     com.github.clans.fab.FloatingActionButton menuFab1;
     com.github.clans.fab.FloatingActionButton menuFab2;
     com.github.clans.fab.FloatingActionButton menuFab3;
+    com.github.clans.fab.FloatingActionButton menuFab4;
+    com.github.clans.fab.FloatingActionButton menuFab5;
+    com.github.clans.fab.FloatingActionButton menuFab6;
     android.support.design.widget.FloatingActionButton fab;
     FloatingActionMenu cvCreationFabMenu;
 
@@ -62,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements
     ProfileChoiceSpinnerAdapter profileChoiceSpinnerAdapter;
     CircularImageView navDrawerPlaceholderCircularImage;
     TextView navDrawerPlaceholderNameTextView;
-
 
     private static AppCompatActivity instance;
     public static AppCompatActivity getInstance(){
@@ -147,6 +150,8 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
+        setCVCreationFabMenuButtonsListeners();
+
         fragmentTransaction.replace(R.id.fragmentsRelativeLayout,homeFragment);
         fragmentTransaction.addToBackStack(String.valueOf(homeFragment.getId()));
         fragmentTransaction.commit();
@@ -158,6 +163,9 @@ public class MainActivity extends AppCompatActivity implements
         menuFab1 = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.menu_fab_1);
         menuFab2 = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.menu_fab_2);
         menuFab3 = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.menu_fab_3);
+        menuFab4 = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.menu_fab_4);
+        menuFab5 = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.menu_fab_5);
+        menuFab6 = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.menu_fab_6);
         cvCreationFabMenu = (FloatingActionMenu) findViewById(R.id.fab_menu);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -176,6 +184,46 @@ public class MainActivity extends AppCompatActivity implements
         profileEditFragment = new ProfileEditFragment();
         profileManagementFragment = new ProfileManagementFragment();
         homeFragment = new HomeFragment();
+    }
+
+    private void setCVCreationFabMenuButtonsListeners(){
+
+        menuFab1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cvCreationFragment.addNewSkillsItem();
+            }
+        });
+        menuFab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cvCreationFragment.addPhoto();
+            }
+        });
+        menuFab3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cvCreationFragment.addNewObjectivesItem();
+            }
+        });
+        menuFab4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cvCreationFragment.addNewExperienceItem();
+            }
+        });
+        menuFab5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cvCreationFragment.addNewInterestFieldsItem();
+            }
+        });
+        menuFab6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cvCreationFragment.addNewPersonalQualitiesItem();
+            }
+        });
     }
 
     @Override
@@ -389,13 +437,6 @@ public class MainActivity extends AppCompatActivity implements
             getSupportActionBar().setTitle("Create new CV");
             cvCreationFabMenu.setVisibility(View.VISIBLE);
             fab.setVisibility(View.GONE);
-
-            menuFab1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    cvCreationFragment.addNewObjectivesItem();
-                }
-            });
 
         }else if(currentFragment instanceof ProfileManagementFragment){
             getSupportActionBar().setTitle("Manage profiles");

@@ -47,7 +47,7 @@
         fab:menu_backgroundColor="#ccffffff">
 
         <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/menu_fab_7"
+            android:id="@+id/menu_fab_6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/fab_add"
@@ -55,7 +55,7 @@
             fab:fab_label="Personal Qualities" />
 
         <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/menu_fab_6"
+            android:id="@+id/menu_fab_5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/fab_add"
@@ -63,7 +63,7 @@
             fab:fab_label="Interest Fields" />
 
         <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/menu_fab_5"
+            android:id="@+id/menu_fab_4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/fab_add"
@@ -71,20 +71,12 @@
             fab:fab_label="Experience" />
 
         <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/menu_fab_4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/fab_add"
-            fab:fab_size="mini"
-            fab:fab_label="Objective" />
-
-        <com.github.clans.fab.FloatingActionButton
             android:id="@+id/menu_fab_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/fab_add"
             fab:fab_size="mini"
-            fab:fab_label="Employer" />
+            fab:fab_label="Objective" />
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/menu_fab_2"

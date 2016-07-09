@@ -1,4 +1,4 @@
-package com.example.radek.cv_creator;
+package com.example.radek.cv_creator.adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import com.example.radek.cv_creator.Profile;
+import com.example.radek.cv_creator.R;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
 /**
