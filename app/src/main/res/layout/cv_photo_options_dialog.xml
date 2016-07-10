@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="64dp"
+    android:paddingRight="64dp"
+    android:paddingTop="32dp">
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/userPhotoBorderThicknessSeekBar"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/borderWidthTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="32dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Border width"
+        android:id="@+id/borderWidthTextView"
+        android:layout_below="@+id/photoCOlorIndicatorBorder"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Border color"
+        android:id="@+id/textView2"
+        android:layout_marginTop="16dp"
+        android:layout_below="@+id/photoTypeRadioGroup"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Photo type"
+        android:id="@+id/textView4"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/textView4"
+        android:layout_alignStart="@+id/textView4"
+        android:id="@+id/photoTypeRadioGroup"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Circular"
+            android:id="@+id/circularPhotoRadioButton"
+            android:checked="true"
+            android:layout_centerVertical="true"
+            android:layout_alignEnd="@+id/textView2" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rectangular"
+            android:id="@+id/rectangularPhotoRadioButton"
+            android:checked="false"
+            android:layout_alignBottom="@+id/radioButton"
+            android:layout_alignParentEnd="true" />
+    </RadioGroup>
+
+    <RelativeLayout
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:background="#868686"
+        android:layout_marginLeft="8dp"
+        android:id="@+id/photoCOlorIndicatorBorder"
+        android:layout_below="@+id/textView2"
+        android:layout_alignStart="@+id/photoTypeRadioGroup"
+        android:layout_marginTop="8dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/photoBorderColorImageView"
+            android:background="#ffffff"
+            android:layout_margin="2dp" />
+    </RelativeLayout>
+
+</RelativeLayout>

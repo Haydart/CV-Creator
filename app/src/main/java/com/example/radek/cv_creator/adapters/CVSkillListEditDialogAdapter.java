@@ -27,7 +27,7 @@ import java.util.ArrayList;
 /**
  * Created by Radek on 2016-07-09.
  */
-public class CVSkillAdapter extends ArrayAdapter<String> {
+public class CVSkillListEditDialogAdapter extends ArrayAdapter<String> {
 
     private Activity activity;
     private Context context;
@@ -35,7 +35,7 @@ public class CVSkillAdapter extends ArrayAdapter<String> {
     private ArrayList<Integer> checkedSkillsIndexes;
     private LayoutInflater inflater;
 
-    public CVSkillAdapter(Activity activity, ArrayList<String> skillsResource) {
+    public CVSkillListEditDialogAdapter(Activity activity, ArrayList<String> skillsResource) {
         super(activity, R.layout.profile_choice_spinner, skillsResource);
         this.activity = activity;
         this.context = (Context)activity;
@@ -90,7 +90,7 @@ public class CVSkillAdapter extends ArrayAdapter<String> {
                 if(skillDeleteCheckbox.isChecked()){
                     checkedSkillsIndexes.add(position);
                 }else{
-                    checkedSkillsIndexes.remove(position);
+                    checkedSkillsIndexes.remove(new Integer(position)); //had to perform packing manually
                 }
             }
         });

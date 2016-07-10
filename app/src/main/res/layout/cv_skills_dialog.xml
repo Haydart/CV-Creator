@@ -21,9 +21,12 @@
         android:phoneNumber="false"
         android:singleLine="false"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_margin="8dp"
+        android:layout_alignParentStart="false"
         android:layout_toStartOf="@id/cvSkillDeleteCheckBox"
         android:inputType=
-            "textCapSentences|textAutoCorrect" />
+            "textCapSentences|textAutoCorrect"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="64dp"
+        android:layout_alignParentLeft="true" />
 </RelativeLayout>

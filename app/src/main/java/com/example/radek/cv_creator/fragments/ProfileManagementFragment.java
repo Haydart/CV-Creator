@@ -34,7 +34,7 @@ public class ProfileManagementFragment extends Fragment {
     private ArrayList<Profile> profilesResource;
     static Bundle args;
     private ExpandableListView expandableListView;
-    ProfileListViewAdapter profileListViewAdapter;
+    private ProfileListViewAdapter profileListViewAdapter;
 
     private MenuItem editProfile;
     private MenuItem deleteProfile;

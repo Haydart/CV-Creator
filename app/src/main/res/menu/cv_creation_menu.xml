@@ -2,21 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/option1"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/option2"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/option3"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/option4"
         android:orderInCategory="100"
         android:title="@string/action_settings"
@@ -26,4 +11,16 @@
         android:orderInCategory="100"
         android:title="Save"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/cv_creation_edit"
+        android:orderInCategory="100"
+        android:title="Edit"
+        app:showAsAction="always"
+        android:visible="false"/>
+    <item
+        android:id="@+id/cv_creation_delete"
+        android:orderInCategory="100"
+        android:title="Delete"
+        app:showAsAction="always"
+        android:visible="false"/>
 </menu>

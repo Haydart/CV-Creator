@@ -14,10 +14,20 @@
         app:civ_border_color="@color/circularImageViewBorder"
         android:layout_alignParentStart="true" />
 
+    <ImageView
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:id="@+id/imageView8"
+        android:src="@drawable/ic_expand_more_black_24dp"
+        android:tint="#ffffff"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="20dp" />
+
     <TextView
         android:ellipsize="end"
         android:scrollHorizontally="true"
-        android:layout_width="match_parent"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:text="Unknown Profile"
@@ -29,12 +39,13 @@
         android:layout_toEndOf="@+id/cvPhotoImageView"
         android:layout_marginStart="8dp"
         android:layout_marginTop="10dp"
-        android:textColor="#ffffff" />
+        android:textColor="#ffffff"
+        android:layout_toStartOf="@id/imageView8" />
 
     <TextView
         android:ellipsize="end"
         android:scrollHorizontally="true"
-        android:layout_width="match_parent"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:text="e-mail address"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -44,7 +55,8 @@
         android:layout_alignStart="@+id/navDrawerPlaceholderProfileNameTextView"
         android:layout_below="@+id/navDrawerPlaceholderProfileNameTextView"
         android:gravity="top|left"
-        android:textColor="#ffffff" />
+        android:textColor="#ffffff"
+        android:layout_toStartOf="@id/imageView8" />
 
 
 </RelativeLayout>

@@ -23,6 +23,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -239,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements
                 if(getSupportFragmentManager().findFragmentById(R.id.fragmentsRelativeLayout) instanceof CVCreationFragment)
                     new AlertDialog.Builder(this)
                             .setTitle("Warning")
-                            .setMessage("Any unsaved changes to CV will be lost!")
+                            .setMessage("Any unsaved changes to CV will be lost! Choose wisely, young padawan")
                             .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     dialog.dismiss();
@@ -408,6 +409,18 @@ public class MainActivity extends AppCompatActivity implements
 
         if(navDrawerAccountChoiceSpinner==null)
             navDrawerAccountChoiceSpinner = (Spinner) findViewById(R.id.profileChoiceSpinner);
+            navDrawerAccountChoiceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    activeProfileIndex = navDrawerAccountChoiceSpinner.getSelectedItemPosition();
+                    cvCreationFragment.setActiveProfileIndex(activeProfileIndex);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
         if(navDrawerPlaceholderCircularImage == null)
             navDrawerPlaceholderCircularImage = (CircularImageView) findViewById(R.id.cvPhotoImageView);
         if(navDrawerPlaceholderNameTextView == null)
@@ -458,7 +471,7 @@ public class MainActivity extends AppCompatActivity implements
                     R.drawable.ic_add_white_24dp));
 
         }else if(currentFragment instanceof CVCreationFragment){
-            getSupportActionBar().setTitle("Create new CV");
+            getSupportActionBar().setTitle("Create CV");
             cvCreationFabMenu.setVisibility(View.VISIBLE);
             fab.setVisibility(View.GONE);
 
