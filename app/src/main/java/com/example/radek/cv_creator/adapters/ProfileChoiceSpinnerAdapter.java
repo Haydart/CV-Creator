@@ -42,7 +42,7 @@ public class ProfileChoiceSpinnerAdapter extends ArrayAdapter<Profile> {
         final View rowView = inflater.inflate(R.layout.profile_choice_spinner, parent, false);
         TextView name = (TextView)rowView.findViewById(R.id.navDrawerPlaceholderProfileNameTextView);
         TextView email = (TextView)rowView.findViewById(R.id.navDrawerProfileMailTextView);
-        CircularImageView profileImageView = (CircularImageView) rowView.findViewById(R.id.cvPhotoImageView);
+        CircularImageView profileImageView = (CircularImageView) rowView.findViewById(R.id.cvPhotoCircularImageView);
 
         name.setText(profilesResource.get(position).getName());
         email.setText((profilesResource.get(position).getEmail()));

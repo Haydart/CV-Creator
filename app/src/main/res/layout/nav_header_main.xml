@@ -35,7 +35,7 @@
 
     <com.mikhaellopez.circularimageview.CircularImageView
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/cvPhotoImageView"
+        android:id="@+id/cvPhotoCircularImageView"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
@@ -57,7 +57,7 @@
         android:id="@+id/navDrawerPlaceholderProfileNameTextView"
         android:textColor="#ffffff"
         android:layout_alignBottom="@+id/profileChoiceSpinner"
-        android:layout_toEndOf="@+id/cvPhotoImageView"
+        android:layout_toEndOf="@+id/cvPhotoCircularImageView"
         android:layout_alignParentStart="false"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="20dp"

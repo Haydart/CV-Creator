@@ -22,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TableRow;
@@ -59,7 +58,6 @@ public class CVCreationFragment extends Fragment {
     MenuItem deleteCvModule;
     int activeProfileIndex = 0;
     boolean userWantsToOverwrite = false;
-    boolean hasActiveProfileChanged = false;
     private static final int ADD_OBJECTIVE = 0;
     private static final int ADD_INTEREST_FIELDS = 1;
     private static final int ADD_PERSONAL_QUALITIES = 2;
@@ -78,7 +76,8 @@ public class CVCreationFragment extends Fragment {
     TextView address2TextView;
     TextView address3TextView;
 
-    CircularImageView userPhoto;
+    CircularImageView userCircularPhoto;
+    ImageView userRectangularPhoto;
 
     LinearLayout objectivesLinearLayout;
     LinearLayout skillsLinearLayout;
@@ -214,8 +213,11 @@ public class CVCreationFragment extends Fragment {
 
     public void setProfileInfo(){
         if(profilesResource!=null && profilesResource.size()>0){
-            if(profilesResource.get(activeProfileIndex).getPhoto()!=null)
-                userPhoto.setImageBitmap(profilesResource.get(activeProfileIndex).getPhoto());
+            if(profilesResource.get(activeProfileIndex).getPhoto()!=null){
+                userCircularPhoto.setImageBitmap(profilesResource.get(activeProfileIndex).getPhoto());
+                userRectangularPhoto.setImageBitmap(profilesResource.get(activeProfileIndex).getPhoto());
+            }
+
             nameTextView.setText(profilesResource.get(activeProfileIndex).getName());
             emailTextView.setText(profilesResource.get(activeProfileIndex).getEmail());
             dobTextView.setText(profilesResource.get(activeProfileIndex).getDOB());
@@ -266,7 +268,8 @@ public class CVCreationFragment extends Fragment {
                                 addNewPersonalQualitiesItem();
                                 break;
                             case ADD_PHOTO:
-                                userPhoto.setVisibility(View.GONE);
+                                userCircularPhoto.setVisibility(View.GONE);
+                                userRectangularPhoto.setVisibility(View.GONE);
                                 Snackbar.make(getActivity().getCurrentFocus(),"Overwriting photo item",Snackbar.LENGTH_SHORT).show();
                                 addPhoto();
                                 break;
@@ -425,9 +428,9 @@ public class CVCreationFragment extends Fragment {
 
     public void addPhoto(){
         if(profilesResource.get(activeProfileIndex).getPhoto()!=null){
-            if(userPhoto.getVisibility() == View.VISIBLE){
+            if(userCircularPhoto.getVisibility() == View.VISIBLE || userRectangularPhoto.getVisibility()== View.VISIBLE){
                 displayDataOverwritingWarning(ADD_PHOTO);
-            }else if(userPhoto.getVisibility() == View.GONE || userWantsToOverwrite) {
+            }else if((userCircularPhoto.getVisibility() == View.GONE && userRectangularPhoto.getVisibility() == View.GONE) || userWantsToOverwrite) {
                 userWantsToOverwrite = false;
                 displayPhotoSectionDialog();
             }
@@ -444,13 +447,27 @@ public class CVCreationFragment extends Fragment {
         View newView = inflater.inflate(R.layout.cv_photo_options_dialog, null,   false);
         final ImageView borderColorImageView = (ImageView)newView.findViewById(R.id.photoBorderColorImageView);
         borderColorImageView.setBackgroundColor(Color.rgb(userPhotoBorderColorRed,userPhotoBorderColorGreen,userPhotoBorderColorBlue));
-        RadioGroup photoTypeRadioGroup = (RadioGroup)newView.findViewById(R.id.photoTypeRadioGroup);
+        final RadioGroup photoTypeRadioGroup = (RadioGroup)newView.findViewById(R.id.photoTypeRadioGroup);
         RadioButton circularPhotoRB = (RadioButton)newView.findViewById(R.id.circularPhotoRadioButton);
         RadioButton rectangularPhotoRB = (RadioButton)newView.findViewById(R.id.rectangularPhotoRadioButton);
         SeekBar userPhotoBorderThicknessSeekBar = (SeekBar)newView.findViewById(R.id.userPhotoBorderThicknessSeekBar);
         final TextView borderWidthTextView = (TextView)newView.findViewById(R.id.borderWidthTextView);
         userPhotoBorderThicknessSeekBar.setMax(10);
         userPhotoBorderThicknessSeekBar.setProgress(userPhotoBorderWidth);
+
+        circularPhotoRB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                userPhotoType = PhotoType.CIRCULAR;
+            }
+        });
+
+        rectangularPhotoRB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                userPhotoType = PhotoType.RECTANGULAR;
+            }
+        });
 
         userPhotoBorderThicknessSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -476,7 +493,6 @@ public class CVCreationFragment extends Fragment {
                             public void onColorSelected(@ColorInt int color) {
                                 borderColorImageView.setBackgroundColor(color);
                                 String colorString = ChromaUtil.getFormattedColorString(color, false);
-                                Toast.makeText(getContext(), "Color picked is " + colorString, Toast.LENGTH_SHORT).show();
                                 userPhotoBorderColorRed = Integer.parseInt(colorString.substring(1,3),16);
                                 userPhotoBorderColorGreen = Integer.parseInt(colorString.substring(3,5),16);
                                 userPhotoBorderColorBlue = Integer.parseInt(colorString.substring(5,7),16);
@@ -520,12 +536,22 @@ public class CVCreationFragment extends Fragment {
 
     private void displayRefreshedPhotoSection(){
         if(profilesResource.get(activeProfileIndex).getPhoto() != null){
-            userPhoto.setVisibility(View.VISIBLE);
-            userPhoto.setBorderColor(Color.rgb(userPhotoBorderColorRed,userPhotoBorderColorGreen,userPhotoBorderColorBlue));
-            userPhoto.setBorderWidth(userPhotoBorderWidth);
+            float scale = getResources().getDisplayMetrics().density;
+
+            if(userPhotoType == PhotoType.CIRCULAR){
+                userRectangularPhoto.setVisibility(View.GONE);
+                userCircularPhoto.setVisibility(View.VISIBLE);
+                userCircularPhoto.setBorderColor(Color.rgb(userPhotoBorderColorRed,userPhotoBorderColorGreen,userPhotoBorderColorBlue));
+                userCircularPhoto.setBorderWidth((int)(userPhotoBorderWidth*scale + 0.5f));
+            }else{
+                userCircularPhoto.setVisibility(View.GONE);
+                userRectangularPhoto.setVisibility(View.VISIBLE);
+                userRectangularPhoto.setPadding((int)(userPhotoBorderWidth*scale + 0.5f),(int)(userPhotoBorderWidth*scale + 0.5f),(int)(userPhotoBorderWidth*scale + 0.5f),(int)(userPhotoBorderWidth*scale + 0.5f));
+                userRectangularPhoto.setBackgroundColor(Color.rgb(userPhotoBorderColorRed,userPhotoBorderColorGreen,userPhotoBorderColorBlue));
+            }
         }
         else
-            userPhoto.setVisibility(View.GONE);
+            userCircularPhoto.setVisibility(View.GONE);
     }
 
     public void addNewExperienceItem(){
@@ -555,7 +581,8 @@ public class CVCreationFragment extends Fragment {
         address2TextView = (TextView) getView().findViewById(R.id.cvAddress2TextView);
         address3TextView = (TextView) getView().findViewById(R.id.cvAddress3TextView);
 
-        userPhoto = (CircularImageView)getView().findViewById(R.id.cvPhotoImageView);
+        userCircularPhoto = (CircularImageView)getView().findViewById(R.id.cvPhotoCircularImageView);
+        userRectangularPhoto = (ImageView) getView().findViewById(R.id.cvPhotoRectangularImageView);
 
         objectivesLinearLayout = (LinearLayout) getView().findViewById(R.id.cvObjectivesLinearLayout);
         skillsLinearLayout = (LinearLayout)getView().findViewById(R.id.cvSkillsLinearLayout);
@@ -571,7 +598,6 @@ public class CVCreationFragment extends Fragment {
 
        layoutInflater = (LayoutInflater)
                 getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
     }
 
     private void setLayoutsOnClickListeners(){
@@ -649,10 +675,22 @@ public class CVCreationFragment extends Fragment {
                 }
             }
         });
-        userPhoto.setOnClickListener(new View.OnClickListener() {
+        userCircularPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "clicked photo", Toast.LENGTH_SHORT).show();
+                if(currentlyFocusedOnType == FocusedType.PHOTO){ //clicked once more to unmatch the iten
+                    currentlyFocusedOnType = FocusedType.NONE;
+                    setActionBarMenuVisibility(false);
+                }
+                else{
+                    currentlyFocusedOnType = FocusedType.PHOTO;
+                    setActionBarMenuVisibility(true);
+                }
+            }
+        });
+        userRectangularPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 if(currentlyFocusedOnType == FocusedType.PHOTO){ //clicked once more to unmatch the iten
                     currentlyFocusedOnType = FocusedType.NONE;
                     setActionBarMenuVisibility(false);
@@ -689,8 +727,9 @@ public class CVCreationFragment extends Fragment {
     private void deleteCurrentlyFocusedItem() {
         switch (currentlyFocusedOnType) {
             case PHOTO:
-                Snackbar.make(getActivity().getCurrentFocus(), "delete image", Snackbar.LENGTH_SHORT).show();
-                userPhoto.setVisibility(View.GONE);
+                Snackbar.make(getActivity().getCurrentFocus(), "User photo deleted", Snackbar.LENGTH_SHORT).show();
+                userCircularPhoto.setVisibility(View.GONE);
+                userRectangularPhoto.setVisibility(View.GONE);
                 break;
             case PERSONAL_TRAITS_ITEM:
                 break;
@@ -699,10 +738,12 @@ public class CVCreationFragment extends Fragment {
             case INTERESTS_ITEM:
                 break;
             case SKILLS_ITEM:
+                Snackbar.make(getActivity().getCurrentFocus(), "Skills section deleted", Snackbar.LENGTH_SHORT).show();
                 skillsLinearLayout.removeAllViews();
                 skillsTableRow.setVisibility(View.GONE);
                 break;
             case OBJECTIVES_ITEM:
+                Snackbar.make(getActivity().getCurrentFocus(), "Objectives section deleted", Snackbar.LENGTH_SHORT).show();
                 objectivesLinearLayout.removeAllViews();
                 objectivesTableRow.setVisibility(View.GONE);
                 break;

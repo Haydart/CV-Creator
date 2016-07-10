@@ -422,7 +422,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
             });
         if(navDrawerPlaceholderCircularImage == null)
-            navDrawerPlaceholderCircularImage = (CircularImageView) findViewById(R.id.cvPhotoImageView);
+            navDrawerPlaceholderCircularImage = (CircularImageView) findViewById(R.id.cvPhotoCircularImageView);
         if(navDrawerPlaceholderNameTextView == null)
             navDrawerPlaceholderNameTextView = (TextView) findViewById(R.id.navDrawerPlaceholderProfileNameTextView);
 
