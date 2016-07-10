@@ -480,7 +480,6 @@ public class CVCreationFragment extends Fragment {
                 borderWidthTextView.setText("Border width = " + userPhotoBorderWidth);
             }
         });
-
         borderColorImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -604,7 +603,7 @@ public class CVCreationFragment extends Fragment {
         objectivesLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "clicked objLayout", Toast.LENGTH_SHORT).show();
+                toggleSectionDashedBorder(false);
                 if(currentlyFocusedOnType == FocusedType.OBJECTIVES_ITEM){ //clicked once more to unmatch the iten
                     currentlyFocusedOnType = FocusedType.NONE;
                     setActionBarMenuVisibility(false);
@@ -612,6 +611,7 @@ public class CVCreationFragment extends Fragment {
                 else{
                     currentlyFocusedOnType = FocusedType.OBJECTIVES_ITEM;
                     setActionBarMenuVisibility(true);
+                    toggleSectionDashedBorder(true);
                 }
 
                 //editObjectivesItem();
@@ -620,7 +620,7 @@ public class CVCreationFragment extends Fragment {
         skillsLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "clicked skillLay", Toast.LENGTH_SHORT).show();
+                toggleSectionDashedBorder(false);
                 if(currentlyFocusedOnType == FocusedType.SKILLS_ITEM){ //clicked once more to unmatch the iten
                     currentlyFocusedOnType = FocusedType.NONE;
                     setActionBarMenuVisibility(false);
@@ -628,6 +628,7 @@ public class CVCreationFragment extends Fragment {
                 else{
                     currentlyFocusedOnType = FocusedType.SKILLS_ITEM;
                     setActionBarMenuVisibility(true);
+                    toggleSectionDashedBorder(true);
                 }
 
                 //editSkillsItem();
@@ -636,7 +637,7 @@ public class CVCreationFragment extends Fragment {
         personalTraitsLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "clicked traitsLay", Toast.LENGTH_SHORT).show();
+                toggleSectionDashedBorder(false);
                 if(currentlyFocusedOnType == FocusedType.PERSONAL_TRAITS_ITEM){ //clicked once more to unmatch the iten
                     currentlyFocusedOnType = FocusedType.NONE;
                     setActionBarMenuVisibility(false);
@@ -644,13 +645,14 @@ public class CVCreationFragment extends Fragment {
                 else{
                     currentlyFocusedOnType = FocusedType.PERSONAL_TRAITS_ITEM;
                     setActionBarMenuVisibility(true);
+                    toggleSectionDashedBorder(true);
                 }
             }
         });
         experienceLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "clicked expLay", Toast.LENGTH_SHORT).show();
+                toggleSectionDashedBorder(false);
                 if(currentlyFocusedOnType == FocusedType.EXPERIENCE_ITEM){ //clicked once more to unmatch the iten
                     currentlyFocusedOnType = FocusedType.NONE;
                     setActionBarMenuVisibility(false);
@@ -658,13 +660,14 @@ public class CVCreationFragment extends Fragment {
                 else{
                     currentlyFocusedOnType = FocusedType.EXPERIENCE_ITEM;
                     setActionBarMenuVisibility(true);
+                    toggleSectionDashedBorder(true);
                 }
             }
         });
         interestsLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "clicked interestsLay", Toast.LENGTH_SHORT).show();
+                toggleSectionDashedBorder(false);
                 if(currentlyFocusedOnType == FocusedType.INTERESTS_ITEM){ //clicked once more to unmatch the iten
                     currentlyFocusedOnType = FocusedType.NONE;
                     setActionBarMenuVisibility(false);
@@ -672,6 +675,7 @@ public class CVCreationFragment extends Fragment {
                 else{
                     currentlyFocusedOnType = FocusedType.INTERESTS_ITEM;
                     setActionBarMenuVisibility(true);
+                    toggleSectionDashedBorder(true);
                 }
             }
         });
@@ -722,6 +726,30 @@ public class CVCreationFragment extends Fragment {
                 })
                 .setCancelable(true)
                 .create().show();
+    }
+
+    private void toggleSectionDashedBorder(boolean activate){
+        switch (currentlyFocusedOnType){
+            case NONE:
+                break;
+            case PERSONAL_TRAITS_ITEM:
+                personalTraitsLinearLayout.setBackground(getResources().getDrawable(activate?R.drawable.border_highlight:R.drawable.border_default));
+                break;
+            case SKILLS_ITEM:
+                skillsLinearLayout.setBackground(getResources().getDrawable(activate?R.drawable.border_highlight:R.drawable.border_default));
+                break;
+            case OBJECTIVES_ITEM:
+                objectivesLinearLayout.setBackground(getResources().getDrawable(activate?R.drawable.border_highlight:R.drawable.border_default));
+                break;
+            case INTERESTS_ITEM:
+                interestsLinearLayout.setBackground(getResources().getDrawable(activate?R.drawable.border_highlight:R.drawable.border_default));
+                break;
+            case EXPERIENCE_ITEM:
+                experienceLinearLayout.setBackground(getResources().getDrawable(activate?R.drawable.border_highlight:R.drawable.border_default));
+                break;
+            case PHOTO:
+                break;
+        }
     }
 
     private void deleteCurrentlyFocusedItem() {
