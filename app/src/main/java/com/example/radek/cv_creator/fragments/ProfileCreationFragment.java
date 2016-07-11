@@ -159,7 +159,7 @@ public class ProfileCreationFragment extends Fragment implements SelectDateFragm
         if(requestCode == PHOTO_REQUEST_CODE){
             if(resultCode == Activity.RESULT_OK){
                 Bundle bundle = data.getExtras();
-                photoBitmap = Bitmap.createScaledBitmap((Bitmap)bundle.get("data"),300,400,false);
+                photoBitmap = Bitmap.createScaledBitmap((Bitmap)bundle.get("data"),600,800,false);
                 photoImageView.setImageBitmap(photoBitmap);
                 photoAdded = true;
             }

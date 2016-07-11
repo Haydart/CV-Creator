@@ -1,14 +1,21 @@
 package com.example.radek.cv_creator.fragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
+import android.os.Environment;
+import android.print.PrintAttributes;
+import android.print.pdf.PrintedPdfDocument;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -43,6 +50,9 @@ import com.pavelsikun.vintagechroma.IndicatorMode;
 import com.pavelsikun.vintagechroma.OnColorSelectedListener;
 import com.pavelsikun.vintagechroma.colormode.ColorMode;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class CVCreationFragment extends Fragment {
@@ -56,6 +66,7 @@ public class CVCreationFragment extends Fragment {
     int userPhotoBorderColorGreen = 255;
     int userPhotoBorderColorBlue = 255;
     int userPhotoBorderWidth = 4;
+    static boolean savePermissionGranted = false;
 
     MenuItem saveCV;
     MenuItem editCvModule;
@@ -113,6 +124,35 @@ public class CVCreationFragment extends Fragment {
         }
         public String getNsme(){
             return name;
+        }
+    }
+
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+    /**
+     * Checks if the app has permission to write to device storage
+     *
+     * If the app does not has permission then the user will be prompted to grant permissions
+     *
+     * @param activity
+     */
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }else{
+            savePermissionGranted = true;
         }
     }
 
@@ -184,12 +224,55 @@ public class CVCreationFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    private void savePDF(){
+        if(savePermissionGranted){
+            // Create a shiny new (but blank) PDF document in memory
+            // We want it to optionally be printable, so add PrintAttributes
+            // and use a PrintedPdfDocument. Simpler: new PdfDocument().
+            PrintAttributes printAttrs = new PrintAttributes.Builder().
+                    setColorMode(PrintAttributes.COLOR_MODE_COLOR).
+                    setMediaSize(PrintAttributes.MediaSize.NA_LETTER).
+                    setResolution(new PrintAttributes.Resolution("zooey", "PRINT_SERVICE", 1000, 2000)).
+                    setMinMargins(PrintAttributes.Margins.NO_MARGINS).
+                    build();
+            PdfDocument document = new PrintedPdfDocument(getContext(), printAttrs);
+            // crate a page description
+            PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(1000, 2000, 1).create();
+            // create a new page from the PageInfo
+            PdfDocument.Page page = document.startPage(pageInfo);
+            // repaint the user's text into the page
+            View content = getView().findViewById(R.id.cvScrollView);
+            content.draw(page.getCanvas());
+            // do final processing of the page
+            document.finishPage(page);
+            // Here you could add more pages in a longer doc app, but you'd have
+            // to handle page-breaking yourself in e.g., write your own word processor...
+            // Now write the PDF document to a file; it actually needs to be a file
+            // since the Share mechanism can't accept a byte[]. though it can
+            // accept a String/CharSequence. Meh.
+            try {
+                File f = new File(Environment.getExternalStorageDirectory().getPath() + "/cv.pdf");
+                Log.d("sdlcjhsdckjygsdcyug",f.getAbsolutePath() + "");
+                FileOutputStream fos = new FileOutputStream(f);
+                document.writeTo(fos);
+                document.close();
+                fos.close();
+            } catch (IOException e) {
+                throw new RuntimeException("Error generating file", e);
+            }
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         if(id==R.id.cv_creation_save){
             Snackbar.make(getActivity().getCurrentFocus(),"CV saved",Snackbar.LENGTH_SHORT).show();
+
+            verifyStoragePermissions(getActivity());
+            savePDF();
+
         }else if(id==R.id.cv_creation_edit){
             toggleSectionDashedBorder(false);
             editCurrentlyFocusedItem();
