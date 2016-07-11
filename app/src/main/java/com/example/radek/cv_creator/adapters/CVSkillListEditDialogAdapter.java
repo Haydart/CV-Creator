@@ -3,24 +3,17 @@ package com.example.radek.cv_creator.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.BitmapFactory;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.radek.cv_creator.Profile;
+import com.example.radek.cv_creator.MainActivity;
 import com.example.radek.cv_creator.R;
-import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.util.ArrayList;
 
@@ -49,7 +42,7 @@ public class CVSkillListEditDialogAdapter extends ArrayAdapter<String> {
     public View getView(final int position, View convertView, ViewGroup parent) {
         final View rowView;
 
-            rowView = inflater.inflate(R.layout.cv_skills_dialog, parent, false);
+            rowView = inflater.inflate(R.layout.cv_skills_edit_dialog, parent, false);
             final TextView skillDescription = (TextView) rowView.findViewById(R.id.cvSkillDescriptionTextView);
             skillDescription.setText(skillsResource.get(position));
 

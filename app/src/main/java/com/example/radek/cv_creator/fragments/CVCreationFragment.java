@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,6 +34,7 @@ import android.widget.Toast;
 import com.example.radek.cv_creator.DbBitmapUtility;
 import com.example.radek.cv_creator.Profile;
 import com.example.radek.cv_creator.R;
+import com.example.radek.cv_creator.adapters.CVExperienceListEditDialogAdapter;
 import com.example.radek.cv_creator.adapters.CVSkillListEditDialogAdapter;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.pavelsikun.vintagechroma.ChromaDialog;
@@ -65,8 +69,10 @@ public class CVCreationFragment extends Fragment {
 
     LayoutInflater inflater;
     ArrayList<String> skills;
+    ArrayList<ArrayList<String>> experience;
     String objectives;
     String personalQualities;
+    String interestFields;
 
     TextView nameTextView;
     TextView occupationTextView;
@@ -289,9 +295,10 @@ public class CVCreationFragment extends Fragment {
         }
     }
 
-    private void displayObjectivesSectionDialog(String editedText){ // if we are editing, edited text is set to current objectives string
+    private void displayObjectivesSectionDialog(final String editedText){ // if we are editing, edited text is set to current objectives string
         final EditText edittext = new EditText(getContext());
         edittext.setText(editedText);
+
         AlertDialog myDialogBox = new AlertDialog.Builder(getContext())
                 //set message, title, and icon
                 .setTitle("Objectives section")
@@ -300,9 +307,9 @@ public class CVCreationFragment extends Fragment {
 
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        objectives = edittext.getText().toString();
-                        displayRefreshedObjectivesSection();
-                        dialog.dismiss();
+                            objectives = edittext.getText().toString();
+                            displayRefreshedObjectivesSection();
+                            dialog.dismiss();
                     }
                 })
 
@@ -312,7 +319,6 @@ public class CVCreationFragment extends Fragment {
                     }
                 })
                 .create();
-
         myDialogBox.show();
     }
 
@@ -554,12 +560,157 @@ public class CVCreationFragment extends Fragment {
     }
 
     public void addNewExperienceItem(){
-        Toast.makeText(getContext(), "new experience item", Toast.LENGTH_SHORT).show();
+        displayExperienceSectionDialog();
+    }
+
+    private void editExperienceItem(){
+        final CVExperienceListEditDialogAdapter experienceAdapter = new CVExperienceListEditDialogAdapter(getActivity(),experience);
+
+        final AlertDialog editSkillsDialog = new AlertDialog.Builder(getActivity())
+                .setAdapter(experienceAdapter, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        //TODO - Code when list item is clicked (int which - is param that gives you the index of clicked item)
+                    }
+                })
+                .setPositiveButton("Apply", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        experience = experienceAdapter.getExperienceResource();
+                        displayRefreshedExperienceList();
+                        dialog.dismiss();
+                    }
+                })
+                .setNeutralButton("Delete Selected", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+
+                        int deletedCount = experienceAdapter.getCheckedExperienceItemIndexes().size();
+                        ArrayList<String> experienceItemsToBeRemoved = new ArrayList<String>();
+
+                        for(int i=0;i<deletedCount;i++){
+                            experienceItemsToBeRemoved.add(skills.get(experienceAdapter.getCheckedExperienceItemIndexes().get(i)));
+                        }
+                        skills.removeAll(experienceItemsToBeRemoved);
+
+                        experienceAdapter.setExperienceResource(experience);
+                        experienceAdapter.notifyDataSetChanged();
+                        displayRefreshedExperienceList();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .setTitle("Edit your Experience")
+                .setIcon(R.drawable.ic_person_black_24dp)
+                .setCancelable(false)
+                .create();
+
+        editSkillsDialog.show();
+    }
+
+    private void displayExperienceSectionDialog(){
+        View newView = inflater.inflate(R.layout.cv_experience_dialog_add_new,null);
+        final EditText name = (EditText)newView.findViewById(R.id.positionName);
+        final EditText timeSpan = (EditText)newView.findViewById(R.id.positionTimeSpan);
+        final EditText description = (EditText)newView.findViewById(R.id.positionDescription);
+
+        final AlertDialog editPhotoDialog = new AlertDialog.Builder(getActivity())
+                .setView(newView)
+                .setPositiveButton("Apply", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ArrayList<String> experienceItem = new ArrayList<String>();
+                        experienceItem.add(name.getText().toString());
+                        experienceItem.add(timeSpan.getText().toString());
+                        experienceItem.add(description.getText().toString());
+                        experience.add(experienceItem);
+                        displayRefreshedExperienceList();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .setTitle("Experience item")
+                .setIcon(R.drawable.ic_person_black_24dp)
+                .setCancelable(false)
+                .create();
+
+        editPhotoDialog.show();
+    }
+
+    private void displayRefreshedExperienceList(){
+        if(experience.size() > 0){
+            experienceTableRow.setVisibility(View.VISIBLE);
+            experienceLinearLayout.removeAllViews();
+            for(ArrayList<String> experienceItem : experience){
+                View experienceView = inflater.inflate(R.layout.cv_experience_list,null);
+                ((TextView)experienceView.findViewById(R.id.cvPositionNameTextView)).setText(experienceItem.get(0));
+                ((TextView)experienceView.findViewById(R.id.cvTimeSpanTextView)).setText(experienceItem.get(1));
+                ((TextView)experienceView.findViewById(R.id.cvDescriptionTextView)).setText(experienceItem.get(2));
+                experienceLinearLayout.addView(experienceView);
+            }
+        }else{
+            experienceTableRow.setVisibility(View.GONE);
+        }
     }
 
     public void addNewInterestFieldsItem(){
-        Toast.makeText(getContext(), "new interest fields item", Toast.LENGTH_SHORT).show();
+        if(interestsLinearLayout.getChildCount() > 0){
+            displayDataOverwritingWarning(ADD_INTEREST_FIELDS);
+        }else if(interestsLinearLayout.getChildCount() == 0 || userWantsToOverwrite) {
+            userWantsToOverwrite = false;
+            displayInterestsSectionDialog("");
+        }
     }
+
+    private void editInterestsItem(){
+        displayInterestsSectionDialog(interestFields);
+    }
+
+    private void displayInterestsSectionDialog(String editedText){
+        final EditText edittext = new EditText(getContext());
+        edittext.setText(editedText);
+        AlertDialog myDialogBox = new AlertDialog.Builder(getContext())
+                //set message, title, and icon
+                .setTitle("Interest fields section")
+                .setMessage("Tell something about your passions and things you do in your freetime")
+                .setView(edittext)
+                .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        interestFields = edittext.getText().toString();
+                        displayRefreshedInterestsSection();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+        myDialogBox.show();
+    }
+
+    private void displayRefreshedInterestsSection(){
+        interestsLinearLayout.removeAllViews();
+        LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        TextView tv = new TextView(getContext());
+        tv.setId(View.generateViewId());
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,8);
+        tv.setLayoutParams(lparams);
+        tv.setText(interestFields);
+
+        interestsLinearLayout.addView(tv);
+        interestsTableRow.setVisibility(View.VISIBLE);
+    }
+
 
     public void addNewPersonalQualitiesItem(){
         if(personalTraitsLinearLayout.getChildCount() > 0){
@@ -618,6 +769,7 @@ public class CVCreationFragment extends Fragment {
 
     public void getReferences(){
         skills = new ArrayList<>();
+        experience = new ArrayList<>();
         nameTextView = (TextView) getView().findViewById(R.id.cvNameTextView);
         occupationTextView = (TextView)getView().findViewById(R.id.cvOccupationTextView);
         emailTextView = (TextView)getView().findViewById(R.id.cvEmailTextView);
@@ -813,6 +965,7 @@ public class CVCreationFragment extends Fragment {
             case EXPERIENCE_ITEM:
                 experienceLinearLayout.removeAllViews();
                 experienceTableRow.setVisibility(View.GONE);
+                experience.clear();
                 break;
             case INTERESTS_ITEM:
                 interestsLinearLayout.removeAllViews();
@@ -842,8 +995,10 @@ public class CVCreationFragment extends Fragment {
                 editPersonalQualitiesItem();
                 break;
             case EXPERIENCE_ITEM:
+                editExperienceItem();
                 break;
             case INTERESTS_ITEM:
+                editInterestsItem();
                 break;
             case SKILLS_ITEM:
                 editSkillsItem();

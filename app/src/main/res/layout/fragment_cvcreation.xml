@@ -188,7 +188,8 @@
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="4dp"
                         android:layout_weight=".3"
-                        android:textColor="@android:color/holo_blue_dark" />
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:orientation="vertical"
@@ -220,7 +221,8 @@
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="4dp"
                         android:layout_weight=".3"
-                        android:textColor="@android:color/holo_blue_dark" />
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:orientation="vertical"
@@ -250,7 +252,8 @@
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="4dp"
                         android:layout_weight=".3"
-                        android:textColor="@android:color/holo_blue_dark" />
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:orientation="vertical"
@@ -258,7 +261,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/cvSkillsLinearLayout"
                         android:layout_weight=".7"
-                        android:paddingLeft="4dp"
+                        android:paddingLeft="16dp"
                         android:paddingTop="4dp" />
                 </TableRow>
 
@@ -280,7 +283,8 @@
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="4dp"
                         android:layout_weight=".3"
-                        android:textColor="@android:color/holo_blue_dark" />
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:orientation="vertical"
@@ -310,7 +314,8 @@
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="4dp"
                         android:layout_weight=".3"
-                        android:textColor="@android:color/holo_blue_dark" />
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:orientation="vertical"
@@ -340,7 +345,8 @@
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="4dp"
                         android:layout_weight=".3"
-                        android:textColor="@android:color/holo_blue_dark" />
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:orientation="vertical"
