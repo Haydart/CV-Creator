@@ -46,7 +46,10 @@ public class ProfileChoiceSpinnerAdapter extends ArrayAdapter<Profile> {
 
         name.setText(profilesResource.get(position).getName());
         email.setText((profilesResource.get(position).getEmail()));
-        profileImageView.setImageBitmap(profilesResource.get(position).getPhoto());
+
+        if(profilesResource.get(position).getPhoto()!=null){
+            profileImageView.setImageBitmap(profilesResource.get(position).getPhoto());
+        }
         profileImageView.setBorderColor(context.getResources().getColor(R.color.navDrawerSpinnerCircularImageViewBorder));
 
         return rowView;
