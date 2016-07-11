@@ -66,6 +66,7 @@ public class CVCreationFragment extends Fragment {
     LayoutInflater inflater;
     ArrayList<String> skills;
     String objectives;
+    String personalQualities;
 
     TextView nameTextView;
     TextView occupationTextView;
@@ -97,16 +98,13 @@ public class CVCreationFragment extends Fragment {
         OBJECTIVES_ITEM ("objectives section"),
         SKILLS_ITEM ("skills section"),
         EXPERIENCE_ITEM ("experience section"),
-        INTERESTS_ITEM ("interests section"),
+        INTERESTS_ITEM ("interest fields section"),
         PERSONAL_TRAITS_ITEM ("personal traits section");
 
-
         String name;
-
         private FocusedType(String componentDisplayedName){
             name = componentDisplayedName;
         }
-
         public String getNsme(){
             return name;
         }
@@ -187,13 +185,14 @@ public class CVCreationFragment extends Fragment {
         if(id==R.id.cv_creation_save){
             Snackbar.make(getActivity().getCurrentFocus(),"CV saved",Snackbar.LENGTH_SHORT).show();
         }else if(id==R.id.cv_creation_edit){
+            toggleSectionDashedBorder(false);
             editCurrentlyFocusedItem();
             currentlyFocusedOnType = FocusedType.NONE;
             setActionBarMenuVisibility(false);
         }else if(id==R.id.cv_creation_delete){
+            toggleSectionDashedBorder(false);
             promptUserBeforeDeletingItem();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -322,6 +321,7 @@ public class CVCreationFragment extends Fragment {
     }
 
     private void displayRefreshedObjectivesSection(){
+            objectivesLinearLayout.removeAllViews();
             LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             TextView tv = new TextView(getContext());
             tv.setId(View.generateViewId());
@@ -562,8 +562,55 @@ public class CVCreationFragment extends Fragment {
     }
 
     public void addNewPersonalQualitiesItem(){
-        Toast.makeText(getContext(), "new personal qualities", Toast.LENGTH_SHORT).show();
+        if(personalTraitsLinearLayout.getChildCount() > 0){
+            displayDataOverwritingWarning(ADD_PERSONAL_QUALITIES);
+        }else if(personalTraitsLinearLayout.getChildCount() == 0 || userWantsToOverwrite) {
+            userWantsToOverwrite = false;
+            displayPersonalQualitiesSectionDialog("");
+        }
     }
+
+    private void editPersonalQualitiesItem(){
+        displayPersonalQualitiesSectionDialog(personalQualities);
+    }
+
+    private void displayPersonalQualitiesSectionDialog(String editedText){// if we are editing, edited text is set to current objectives string
+        final EditText edittext = new EditText(getContext());
+        edittext.setText(editedText);
+        AlertDialog myDialogBox = new AlertDialog.Builder(getContext())
+                //set message, title, and icon
+                .setTitle("Personal traits section")
+                .setMessage("Tell something about youself. It`s a good place to lay out your soft skills")
+                .setView(edittext)
+                .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        personalQualities = edittext.getText().toString();
+                        displayRefreshedPersonalQualitiesSection();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+        myDialogBox.show();
+    }
+
+    private void displayRefreshedPersonalQualitiesSection(){
+        personalTraitsLinearLayout.removeAllViews();
+        LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        TextView tv = new TextView(getContext());
+        tv.setId(View.generateViewId());
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,8);
+        tv.setLayoutParams(lparams);
+        tv.setText(personalQualities);
+
+        personalTraitsLinearLayout.addView(tv);
+        personalTraitsTableRow.setVisibility(View.VISIBLE);
+    }
+
 
     public interface OnCVCreationListener{
         void onCVCreated();
@@ -721,6 +768,7 @@ public class CVCreationFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         deleteCurrentlyFocusedItem();
+                        toggleSectionDashedBorder(false);
                         dialog.dismiss();
                     }
                 })
@@ -755,29 +803,32 @@ public class CVCreationFragment extends Fragment {
     private void deleteCurrentlyFocusedItem() {
         switch (currentlyFocusedOnType) {
             case PHOTO:
-                Snackbar.make(getActivity().getCurrentFocus(), "User photo deleted", Snackbar.LENGTH_SHORT).show();
                 userCircularPhoto.setVisibility(View.GONE);
                 userRectangularPhoto.setVisibility(View.GONE);
                 break;
             case PERSONAL_TRAITS_ITEM:
+                personalTraitsLinearLayout.removeAllViews();
+                personalTraitsTableRow.setVisibility(View.GONE);
                 break;
             case EXPERIENCE_ITEM:
+                experienceLinearLayout.removeAllViews();
+                experienceTableRow.setVisibility(View.GONE);
                 break;
             case INTERESTS_ITEM:
+                interestsLinearLayout.removeAllViews();
+                interestsTableRow.setVisibility(View.GONE);
                 break;
             case SKILLS_ITEM:
-                Snackbar.make(getActivity().getCurrentFocus(), "Skills section deleted", Snackbar.LENGTH_SHORT).show();
                 skillsLinearLayout.removeAllViews();
                 skillsTableRow.setVisibility(View.GONE);
+                skills.clear();
                 break;
             case OBJECTIVES_ITEM:
-                Snackbar.make(getActivity().getCurrentFocus(), "Objectives section deleted", Snackbar.LENGTH_SHORT).show();
                 objectivesLinearLayout.removeAllViews();
                 objectivesTableRow.setVisibility(View.GONE);
                 break;
-            default:
-                Snackbar.make(getActivity().getCurrentFocus(), "There was nothing selected to delete", Snackbar.LENGTH_SHORT).show();
         }
+        Snackbar.make(getActivity().getCurrentFocus(), currentlyFocusedOnType.getNsme() +" deleted", Snackbar.LENGTH_SHORT).show();
         currentlyFocusedOnType = FocusedType.NONE;
         setActionBarMenuVisibility(false);
     }
@@ -785,10 +836,10 @@ public class CVCreationFragment extends Fragment {
     private void editCurrentlyFocusedItem(){
         switch(currentlyFocusedOnType){
             case PHOTO:
-                Snackbar.make(getActivity().getCurrentFocus(), "edit image", Snackbar.LENGTH_SHORT).show();
                 editPhotoItem();
                 break;
             case PERSONAL_TRAITS_ITEM:
+                editPersonalQualitiesItem();
                 break;
             case EXPERIENCE_ITEM:
                 break;

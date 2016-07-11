@@ -16,6 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.radek.cv_creator.DbBitmapUtility;
 import com.example.radek.cv_creator.Profile;
@@ -34,6 +36,8 @@ public class ProfileManagementFragment extends Fragment {
     private ArrayList<Profile> profilesResource;
     static Bundle args;
     private ExpandableListView expandableListView;
+    private TextView noProfilesTextView;
+    private ImageView noProfilesImageView;
     private ProfileListViewAdapter profileListViewAdapter;
 
     private MenuItem editProfile;
@@ -72,8 +76,16 @@ public class ProfileManagementFragment extends Fragment {
         View fragmentView = inflater.inflate(R.layout.fragment_manage_profiles, container, false);
         profilesResource = (ArrayList<Profile>) args.get("profilesResource");
         expandableListView = (ExpandableListView) fragmentView.findViewById(R.id.profilesExpandableListView);
+        noProfilesImageView = (ImageView)fragmentView.findViewById(R.id.noProfilesToManageImageView);
+        noProfilesTextView = (TextView) fragmentView.findViewById(R.id.noProfilesToManageTextView);
         profileListViewAdapter = new ProfileListViewAdapter(activity, profilesResource);
         expandableListView.setAdapter(profileListViewAdapter);
+
+        if(profilesResource.size()==0){
+            noProfilesImageView.setVisibility(View.VISIBLE);
+            noProfilesTextView.setVisibility(View.VISIBLE);
+            expandableListView.setVisibility(View.GONE);
+        }
 
         //TODO make it independent on screen size
         expandableListView.setIndicatorBounds(850,950);

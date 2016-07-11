@@ -313,12 +313,17 @@ public class MainActivity extends AppCompatActivity implements
 
         } else if (id == R.id.nav_cv_create) {
             Bundle bundle = new Bundle();
-            Fragment fragment = new CVCreationFragment();
-            bundle.putParcelableArrayList("profilesResource",userProfiles);
-            fragment.setArguments(bundle);
-            cvCreationFragment = (CVCreationFragment)fragment;
-            displayFragment(cvCreationFragment, ADD_TO_BACKSTACK);
-            cvCreationFragment.setActiveProfileIndex(activeProfileIndex);
+            if(userProfiles!=null && userProfiles.size()>0){
+                Fragment fragment = new CVCreationFragment();
+                bundle.putParcelableArrayList("profilesResource",userProfiles);
+                fragment.setArguments(bundle);
+                cvCreationFragment = (CVCreationFragment)fragment;
+                displayFragment(cvCreationFragment, ADD_TO_BACKSTACK);
+                cvCreationFragment.setActiveProfileIndex(activeProfileIndex);
+            }else{
+                Snackbar.make(getCurrentFocus(),"Please create a profile to assign CV to, first",Snackbar.LENGTH_LONG).show();
+                onNavigationItemSelected(new ActionMenuItem(getApplicationContext(),0,R.id.nav_profie_create,0,0,""));
+            }
 
         } else if (id == R.id.nav_manage_profiles) {
             Fragment fragment = new ProfileManagementFragment();
@@ -406,8 +411,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void setNavViewProfile(){
-
-        if(navDrawerAccountChoiceSpinner==null)
+        if(navDrawerAccountChoiceSpinner==null) {
             navDrawerAccountChoiceSpinner = (Spinner) findViewById(R.id.profileChoiceSpinner);
             navDrawerAccountChoiceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -418,9 +422,9 @@ public class MainActivity extends AppCompatActivity implements
 
                 @Override
                 public void onNothingSelected(AdapterView<?> adapterView) {
-
                 }
             });
+        }
         if(navDrawerPlaceholderCircularImage == null)
             navDrawerPlaceholderCircularImage = (CircularImageView) findViewById(R.id.cvPhotoCircularImageView);
         if(navDrawerPlaceholderNameTextView == null)
@@ -509,6 +513,7 @@ public class MainActivity extends AppCompatActivity implements
                         userProfiles.set(lastEditedProfileIndex,newlyEditedProfile);
                         activeProfileIndex = lastEditedProfileIndex;
                         setNavViewProfile();
+                        cvCreationFragment.setActiveProfileIndex(activeProfileIndex);
 
                         try {
                             contentStorageManager.updateProfile(newlyEditedProfile);
