@@ -67,6 +67,17 @@ public class Profile implements Serializable, Parcelable{
         }
     };
 
+    public String getCVFileName(){
+        StringBuilder result = new StringBuilder();
+        String[] stringComp = name.split(" ");
+        for(String el : stringComp){
+            result.append(el);
+            result.append("_");
+        }
+        result.append("resume.pdf");
+        return result.toString();
+    }
+
     public int getID() {
         return ID;
     }

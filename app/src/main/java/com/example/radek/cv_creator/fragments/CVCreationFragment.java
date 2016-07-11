@@ -4,9 +4,11 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.pdf.PdfDocument;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.print.PrintAttributes;
@@ -39,6 +41,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.radek.cv_creator.DbBitmapUtility;
+import com.example.radek.cv_creator.PDFManager;
 import com.example.radek.cv_creator.Profile;
 import com.example.radek.cv_creator.R;
 import com.example.radek.cv_creator.adapters.CVExperienceListEditDialogAdapter;
@@ -77,6 +80,7 @@ public class CVCreationFragment extends Fragment {
     private static final int ADD_INTEREST_FIELDS = 1;
     private static final int ADD_PERSONAL_QUALITIES = 2;
     private static final int ADD_PHOTO = 3;
+    PDFManager pdfManager;
 
     LayoutInflater inflater;
     ArrayList<String> skills;
@@ -133,6 +137,18 @@ public class CVCreationFragment extends Fragment {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
+    public enum PhotoType{
+        CIRCULAR,
+        RECTANGULAR;
+    }
+
+    FocusedType currentlyFocusedOnType = FocusedType.NONE;
+    PhotoType userPhotoType = PhotoType.CIRCULAR;
+
+    public CVCreationFragment() {
+        // Required empty public constructor
+    }
+
     /**
      * Checks if the app has permission to write to device storage
      *
@@ -154,18 +170,6 @@ public class CVCreationFragment extends Fragment {
         }else{
             savePermissionGranted = true;
         }
-    }
-
-    public enum PhotoType{
-        CIRCULAR,
-        RECTANGULAR;
-    }
-
-    FocusedType currentlyFocusedOnType = FocusedType.NONE;
-    PhotoType userPhotoType = PhotoType.CIRCULAR;
-
-    public CVCreationFragment() {
-        // Required empty public constructor
     }
 
     public static void setArgumentsBundle(Bundle bundle){
@@ -224,45 +228,6 @@ public class CVCreationFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    private void savePDF(){
-        if(savePermissionGranted){
-            // Create a shiny new (but blank) PDF document in memory
-            // We want it to optionally be printable, so add PrintAttributes
-            // and use a PrintedPdfDocument. Simpler: new PdfDocument().
-            PrintAttributes printAttrs = new PrintAttributes.Builder().
-                    setColorMode(PrintAttributes.COLOR_MODE_COLOR).
-                    setMediaSize(PrintAttributes.MediaSize.NA_LETTER).
-                    setResolution(new PrintAttributes.Resolution("zooey", "PRINT_SERVICE", 1000, 2000)).
-                    setMinMargins(PrintAttributes.Margins.NO_MARGINS).
-                    build();
-            PdfDocument document = new PrintedPdfDocument(getContext(), printAttrs);
-            // crate a page description
-            PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(1000, 2000, 1).create();
-            // create a new page from the PageInfo
-            PdfDocument.Page page = document.startPage(pageInfo);
-            // repaint the user's text into the page
-            View content = getView().findViewById(R.id.cvScrollView);
-            content.draw(page.getCanvas());
-            // do final processing of the page
-            document.finishPage(page);
-            // Here you could add more pages in a longer doc app, but you'd have
-            // to handle page-breaking yourself in e.g., write your own word processor...
-            // Now write the PDF document to a file; it actually needs to be a file
-            // since the Share mechanism can't accept a byte[]. though it can
-            // accept a String/CharSequence. Meh.
-            try {
-                File f = new File(Environment.getExternalStorageDirectory().getPath() + "/cv.pdf");
-                Log.d("sdlcjhsdckjygsdcyug",f.getAbsolutePath() + "");
-                FileOutputStream fos = new FileOutputStream(f);
-                document.writeTo(fos);
-                document.close();
-                fos.close();
-            } catch (IOException e) {
-                throw new RuntimeException("Error generating file", e);
-            }
-        }
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -271,7 +236,8 @@ public class CVCreationFragment extends Fragment {
             Snackbar.make(getActivity().getCurrentFocus(),"CV saved",Snackbar.LENGTH_SHORT).show();
 
             verifyStoragePermissions(getActivity());
-            savePDF();
+            pdfManager.savePDF(profilesResource.get(activeProfileIndex).getCVFileName(),getView(),savePermissionGranted);
+            pdfManager.displayCreatedPDF(profilesResource.get(activeProfileIndex).getCVFileName());
 
         }else if(id==R.id.cv_creation_edit){
             toggleSectionDashedBorder(false);
@@ -414,7 +380,7 @@ public class CVCreationFragment extends Fragment {
             LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             TextView tv = new TextView(getContext());
             tv.setId(View.generateViewId());
-            tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,8);
+            tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,9);
             tv.setLayoutParams(lparams);
             tv.setText(objectives);
 
@@ -505,7 +471,7 @@ public class CVCreationFragment extends Fragment {
                         LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 TextView tv = new TextView(getContext());
                 tv.setId(View.generateViewId());
-                tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,8);
+                tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,9);
                 tv.setLayoutParams(lparams);
                 tv.setText(skillItem);
                 skillsLinearLayout.addView(tv);
@@ -786,7 +752,7 @@ public class CVCreationFragment extends Fragment {
         LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         TextView tv = new TextView(getContext());
         tv.setId(View.generateViewId());
-        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,8);
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,9);
         tv.setLayoutParams(lparams);
         tv.setText(interestFields);
 
@@ -837,14 +803,13 @@ public class CVCreationFragment extends Fragment {
         LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         TextView tv = new TextView(getContext());
         tv.setId(View.generateViewId());
-        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,8);
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,9);
         tv.setLayoutParams(lparams);
         tv.setText(personalQualities);
 
         personalTraitsLinearLayout.addView(tv);
         personalTraitsTableRow.setVisibility(View.VISIBLE);
     }
-
 
     public interface OnCVCreationListener{
         void onCVCreated();
@@ -879,6 +844,8 @@ public class CVCreationFragment extends Fragment {
 
        layoutInflater = (LayoutInflater)
                 getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        pdfManager = new PDFManager(getActivity(),savePermissionGranted);
     }
 
     private void setLayoutsOnClickListeners(){
