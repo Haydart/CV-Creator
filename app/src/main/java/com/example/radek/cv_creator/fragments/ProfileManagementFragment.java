@@ -137,13 +137,13 @@ public class ProfileManagementFragment extends Fragment {
         int id = item.getItemId();
 
         if(id == R.id.editProfile){
-            Snackbar.make(getActivity().getCurrentFocus(),"EDIT PROFILE",Snackbar.LENGTH_SHORT).show();
             profileManagementEventListener.onEditProfilePressed(lastExpandedPosition);
+            expandableListView.collapseGroup(lastExpandedPosition);
         }else if(id == R.id.deleteProfile){
-            Snackbar.make(getActivity().getCurrentFocus(),"DELETE PROFILE",Snackbar.LENGTH_SHORT).show();
             profileManagementEventListener.onDeleteProfilePressed(lastExpandedPosition);
+            expandableListView.collapseGroup(lastExpandedPosition);
         }
-
+        setActionBarMenuVisibility(false);
         return super.onOptionsItemSelected(item);
     }
 

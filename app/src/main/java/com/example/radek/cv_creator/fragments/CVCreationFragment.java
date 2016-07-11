@@ -435,7 +435,7 @@ public class CVCreationFragment extends Fragment {
                 displayPhotoSectionDialog();
             }
         }else{
-            Snackbar.make(getActivity().getCurrentFocus(),"The active profile has no photo. Go under Manage Profiles to change that",Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(getActivity().getCurrentFocus(),"The active profile has no photo. Go under Manage Profiles to change that",Snackbar.LENGTH_LONG).show();
         }
     }
 
